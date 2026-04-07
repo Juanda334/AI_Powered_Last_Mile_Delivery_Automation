@@ -131,8 +131,7 @@ class CriticCommunicationOutput(BaseModel):
 
     decision: Literal["ACCEPT", "ESCALATE"] = Field(
         description=(
-            "ACCEPT: message is appropriate. "
-            "ESCALATE: needs supervisor review."
+            "ACCEPT: message is appropriate. ESCALATE: needs supervisor review."
         ),
     )
     rationale: str = Field(
@@ -163,9 +162,7 @@ def build_critic_resolution_context(view: dict[str, Any]) -> str:
     str
         Formatted multi-section string for the critic's user message.
     """
-    playbook_text = format_playbook_context(
-        view.get("playbook_context") or []
-    )
+    playbook_text = format_playbook_context(view.get("playbook_context") or [])
 
     consolidated = view.get("consolidated_event") or {}
 
@@ -275,17 +272,15 @@ def critic_resolution_node(
 
         # 3. Single LLM call with structured output
         try:
-            structured_llm = eval_llm.with_structured_output(
-                CriticResolutionOutput
+            structured_llm = eval_llm.with_structured_output(CriticResolutionOutput)
+            result = structured_llm.invoke(
+                [
+                    SystemMessage(content=CRITIC_RESOLUTION_SYSTEM_PROMPT),
+                    HumanMessage(content=user_content),
+                ]
             )
-            result = structured_llm.invoke([
-                SystemMessage(content=CRITIC_RESOLUTION_SYSTEM_PROMPT),
-                HumanMessage(content=user_content),
-            ])
         except Exception as exc:
-            logger.error(
-                "critic_resolution LLM failed: %s", str(exc)[:200]
-            )
+            logger.error("critic_resolution LLM failed: %s", str(exc)[:200])
             result = CriticResolutionOutput(
                 decision="ESCALATE",
                 rationale=(
@@ -331,19 +326,13 @@ def critic_resolution_node(
 
         merged["next_agent"] = AgentName.CRITIC_RESOLUTION
 
-        logger.info(
-            "critic_resolution_node  decision=%s", result.decision
-        )
+        logger.info("critic_resolution_node  decision=%s", result.decision)
         return merged  # type: ignore[return-value]
 
     except Exception as exc:
-        logger.error(
-            "critic_resolution_node fatal error: %s", exc, exc_info=True
-        )
+        logger.error("critic_resolution_node fatal error: %s", exc, exc_info=True)
         traj_fallback = list(state.get("trajectory_log") or [])
-        traj_fallback.append(
-            f"critic_resolution: FATAL ERROR — {str(exc)[:200]}"
-        )
+        traj_fallback.append(f"critic_resolution: FATAL ERROR — {str(exc)[:200]}")
         fallback: dict[str, Any] = {
             "critic_resolution_output": {
                 "decision": "ESCALATE",
@@ -403,17 +392,15 @@ def critic_communication_node(
 
         # 3. Single LLM call with structured output
         try:
-            structured_llm = eval_llm.with_structured_output(
-                CriticCommunicationOutput
+            structured_llm = eval_llm.with_structured_output(CriticCommunicationOutput)
+            result = structured_llm.invoke(
+                [
+                    SystemMessage(content=CRITIC_COMMUNICATION_SYSTEM_PROMPT),
+                    HumanMessage(content=user_content),
+                ]
             )
-            result = structured_llm.invoke([
-                SystemMessage(content=CRITIC_COMMUNICATION_SYSTEM_PROMPT),
-                HumanMessage(content=user_content),
-            ])
         except Exception as exc:
-            logger.error(
-                "critic_communication LLM failed: %s", str(exc)[:200]
-            )
+            logger.error("critic_communication LLM failed: %s", str(exc)[:200])
             result = CriticCommunicationOutput(
                 decision="ESCALATE",
                 rationale=(
@@ -443,9 +430,7 @@ def critic_communication_node(
 
         # 6. Append audit entries (outside view scope)
         traj = list(merged.get("trajectory_log") or [])
-        traj.append(
-            f"critic_communication: decision={result.decision}"
-        )
+        traj.append(f"critic_communication: decision={result.decision}")
         merged["trajectory_log"] = traj
 
         tool_log = list(merged.get("tool_calls_log") or [])
@@ -454,9 +439,7 @@ def critic_communication_node(
 
         merged["next_agent"] = AgentName.CRITIC_COMMUNICATION
 
-        logger.info(
-            "critic_communication_node  decision=%s", result.decision
-        )
+        logger.info("critic_communication_node  decision=%s", result.decision)
         return merged  # type: ignore[return-value]
 
     except Exception as exc:
@@ -466,9 +449,7 @@ def critic_communication_node(
             exc_info=True,
         )
         traj_fallback = list(state.get("trajectory_log") or [])
-        traj_fallback.append(
-            f"critic_communication: FATAL ERROR — {str(exc)[:200]}"
-        )
+        traj_fallback.append(f"critic_communication: FATAL ERROR — {str(exc)[:200]}")
         fallback: dict[str, Any] = {
             "critic_communication_output": {
                 "decision": "ESCALATE",

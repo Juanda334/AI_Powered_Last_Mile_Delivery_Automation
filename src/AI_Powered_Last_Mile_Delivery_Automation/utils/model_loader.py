@@ -4,10 +4,15 @@ from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from AI_Powered_Last_Mile_Delivery_Automation.utils.config_loader import load_config
 from langchain_huggingface import HuggingFaceEmbeddings
-from AI_Powered_Last_Mile_Delivery_Automation.logger.logging_config import get_module_logger
-from AI_Powered_Last_Mile_Delivery_Automation.exceptions.exception import DocumentPortalException
+from AI_Powered_Last_Mile_Delivery_Automation.logger.logging_config import (
+    get_module_logger,
+)
+from AI_Powered_Last_Mile_Delivery_Automation.exceptions.exception import (
+    DocumentPortalException,
+)
 
 logger = get_module_logger("utils.model_loader")
+
 
 class ApiKeyManager:
     REQUIRED_KEYS = ["OPENAI_API_KEY", "OPENAI_API_BASE"]
@@ -29,7 +34,6 @@ class ApiKeyManager:
             raise DocumentPortalException("Missing API keys", sys)
 
         logger.info(f"API keys loaded: {list(self.api_keys.keys())}")
-
 
     def get(self, key: str) -> str:
         val = self.api_keys.get(key)
@@ -54,7 +58,6 @@ class ModelLoader:
         self.config = load_config()
         logger.info(f"YAML config loaded: {list(self.config.keys())}")
 
-
     def load_embeddings(self):
         """
         Load and return embedding model from Google Generative AI.
@@ -64,9 +67,9 @@ class ModelLoader:
             logger.info(f"Loading embedding model: {model_name}")
             embedding_model = HuggingFaceEmbeddings(
                 model_name=model_name,
-                model_kwargs={"device": "cpu"},        # Use "cuda" if GPU available
+                model_kwargs={"device": "cpu"},  # Use "cuda" if GPU available
                 encode_kwargs={"normalize_embeddings": True},
-                )
+            )
             return embedding_model
         except Exception as e:
             logger.error(f"Error loading embedding model: {e}")
@@ -79,7 +82,7 @@ class ModelLoader:
         llm_block = self.config["llm"]
         gen_llm_key = os.getenv("GEN_LLM", "gen_llm")
         eval_llm_key = os.getenv("EVAL_LLM", "eval_llm")
-        
+
         if gen_llm_key not in llm_block:
             logger.error(f"LLM type not found in config: {gen_llm_key}")
             raise ValueError(f"LLM provider '{gen_llm_key}' not found in config")
@@ -87,24 +90,27 @@ class ModelLoader:
         if eval_llm_key not in llm_block:
             logger.error(f"LLM type not found in config: {eval_llm_key}")
             raise ValueError(f"LLM provider '{eval_llm_key}' not found in config")
-        
 
         gen_llm_config = llm_block[gen_llm_key]
         gen_provider = gen_llm_config.get("provider")
         gen_model_name = gen_llm_config.get("model_name")
         gen_temperature = gen_llm_config.get("temperature")
 
-        logger.info(f"Loading Gen LLM: {gen_provider} - {gen_model_name}")        
-        
+        logger.info(f"Loading Gen LLM: {gen_provider} - {gen_model_name}")
+
         eval_llm_config = llm_block[eval_llm_key]
         eval_provider = eval_llm_config.get("provider")
         eval_model_name = eval_llm_config.get("model_name")
         eval_temperature = eval_llm_config.get("temperature")
-        
+
         logger.info(f"Loading Eval LLM: {eval_provider} - {eval_model_name}")
 
-        gen_llm = ChatOpenAI(model=gen_model_name, temperature=gen_temperature) # Generation/resolution/communication agents
-        eval_llm = ChatOpenAI(model=eval_model_name, temperature=eval_temperature) # Critic agents and coherence evaluator
+        gen_llm = ChatOpenAI(
+            model=gen_model_name, temperature=gen_temperature
+        )  # Generation/resolution/communication agents
+        eval_llm = ChatOpenAI(
+            model=eval_model_name, temperature=eval_temperature
+        )  # Critic agents and coherence evaluator
 
         return gen_llm, eval_llm
 

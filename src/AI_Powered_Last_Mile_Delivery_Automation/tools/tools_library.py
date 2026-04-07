@@ -78,7 +78,9 @@ class ToolMaster:
         self._retriever = retriever
         self._db_path = Path(db_path) if db_path else _EXTERNAL_DB
         self._delivery_logs_path = (
-            Path(delivery_logs_path) if delivery_logs_path else _PROCESSED_DIR / "delivery_logs.csv"
+            Path(delivery_logs_path)
+            if delivery_logs_path
+            else _PROCESSED_DIR / "delivery_logs.csv"
         )
 
         # Open a shared read-only SQLite connection
@@ -289,9 +291,7 @@ class ToolMaster:
                 pkg_level = size_hierarchy.get(package_size, 0)
 
                 cursor = owner._db_conn.cursor()
-                cursor.execute(
-                    "SELECT * FROM lockers WHERE zip_code = ?", (zip_code,)
-                )
+                cursor.execute("SELECT * FROM lockers WHERE zip_code = ?", (zip_code,))
                 rows = cursor.fetchall()
 
                 results: list[dict] = []
@@ -307,9 +307,14 @@ class ToolMaster:
                     elif locker["capacity_status"] == "FULL":
                         locker["eligible"] = False
                         locker["reason"] = "Locker is FULL"
-                    elif locker["capacity_status"] == "LIMITED" and package_size != "SMALL":
+                    elif (
+                        locker["capacity_status"] == "LIMITED"
+                        and package_size != "SMALL"
+                    ):
                         locker["eligible"] = False
-                        locker["reason"] = "Locker is LIMITED - only SMALL packages accepted"
+                        locker["reason"] = (
+                            "Locker is LIMITED - only SMALL packages accepted"
+                        )
                     else:
                         locker["eligible"] = True
                         locker["reason"] = "Compatible"
@@ -454,7 +459,12 @@ class ToolMaster:
                                 f"AUTOMATIC: Perishable with {hours}hr delay (>4hr threshold)"
                             )
 
-                fraud_keywords = ["vacant", "demolished", "construction site", "empty lot"]
+                fraud_keywords = [
+                    "vacant",
+                    "demolished",
+                    "construction site",
+                    "empty lot",
+                ]
                 if status_code == "ADDRESS_ISSUE" and any(
                     kw in status_description.lower() for kw in fraud_keywords
                 ):

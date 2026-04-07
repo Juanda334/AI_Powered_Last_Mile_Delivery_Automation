@@ -1,4 +1,5 @@
 """Unit tests for utils/document_ops.py."""
+
 from __future__ import annotations
 
 from pathlib import Path

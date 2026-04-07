@@ -184,9 +184,7 @@ def sanitize_initial_state(
 
     # raw_rows
     if not isinstance(raw_rows, list):
-        raise ValueError(
-            f"raw_rows must be a list, got {type(raw_rows).__name__}"
-        )
+        raise ValueError(f"raw_rows must be a list, got {type(raw_rows).__name__}")
     clean_rows: list[dict] = []
     dropped = 0
     for row in raw_rows:
@@ -436,9 +434,7 @@ def run_workflow(
     """
     start = time.time()
     try:
-        initial_state = build_initial_state(
-            shipment_id, raw_rows, max_loops=max_loops
-        )
+        initial_state = build_initial_state(shipment_id, raw_rows, max_loops=max_loops)
     except ValueError as exc:
         logger.error(
             "run_workflow  rejected input for shipment_id=%r: %s",

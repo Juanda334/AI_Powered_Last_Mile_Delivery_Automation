@@ -98,44 +98,44 @@ class UnifiedAgentState(TypedDict, total=False):
     """
 
     # ── Input ────────────────────────────────────────────────────────────
-    raw_rows: list[dict]                        # Raw delivery log rows for this shipment
+    raw_rows: list[dict]  # Raw delivery log rows for this shipment
     shipment_id: str
 
     # ── Preprocessor output ──────────────────────────────────────────────
-    consolidated_event: dict                    # Deduplicated, consolidated event
-    customer_profile: dict                      # Redacted profile for resolution (no PII)
-    customer_profile_full: dict                 # Full profile with PII for communication
-    locker_availability: list[dict]             # Lockers in same zip
-    playbook_context: list[dict]                # Retrieved playbook chunks with page metadata
-    escalation_signals: dict                    # Deterministic rule output
-    noise_override: bool                        # Preprocessor guardrail flag for routine noise
-    guardrail_triggered: bool                   # True if input injection detected
+    consolidated_event: dict  # Deduplicated, consolidated event
+    customer_profile: dict  # Redacted profile for resolution (no PII)
+    customer_profile_full: dict  # Full profile with PII for communication
+    locker_availability: list[dict]  # Lockers in same zip
+    playbook_context: list[dict]  # Retrieved playbook chunks with page metadata
+    escalation_signals: dict  # Deterministic rule output
+    noise_override: bool  # Preprocessor guardrail flag for routine noise
+    guardrail_triggered: bool  # True if input injection detected
 
     # ── Resolution Agent output ──────────────────────────────────────────
-    resolution_output: dict                     # {is_exception, resolution, rationale}
+    resolution_output: dict  # {is_exception, resolution, rationale}
 
     # ── Critic — resolution validation ───────────────────────────────────
-    critic_resolution_output: dict              # {decision, rationale}
-    resolution_revision_count: int              # Track retries, max 2
-    critic_feedback: str                        # Feedback for revision loop
+    critic_resolution_output: dict  # {decision, rationale}
+    resolution_revision_count: int  # Track retries, max 2
+    critic_feedback: str  # Feedback for revision loop
 
     # ── Communication Agent output ───────────────────────────────────────
-    communication_output: dict                  # {tone_label, communication_message}
+    communication_output: dict  # {tone_label, communication_message}
 
     # ── Critic — communication validation ────────────────────────────────
-    critic_communication_output: dict           # {decision, rationale}
+    critic_communication_output: dict  # {decision, rationale}
 
     # ── Routing ──────────────────────────────────────────────────────────
-    next_agent: str                             # Next node to route to (see AgentName)
-    max_loops: int                              # Max revision loops
+    next_agent: str  # Next node to route to (see AgentName)
+    max_loops: int  # Max revision loops
 
     # ── Final ────────────────────────────────────────────────────────────
-    escalated: bool                             # Whether any critic node returned ESCALATE
-    tool_calls_log: list[str]                   # Log of all tool invocations
-    trajectory_log: list[str]                   # Audit trail of agent decisions
-    start_time: Optional[float]                 # Pipeline start timestamp
-    latency_sec: Optional[float]                # Total pipeline latency
-    final_actions: list[dict]                   # Final packaged output
+    escalated: bool  # Whether any critic node returned ESCALATE
+    tool_calls_log: list[str]  # Log of all tool invocations
+    trajectory_log: list[str]  # Audit trail of agent decisions
+    start_time: Optional[float]  # Pipeline start timestamp
+    latency_sec: Optional[float]  # Total pipeline latency
+    final_actions: list[dict]  # Final packaged output
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -275,7 +275,11 @@ class UnifiedAgentStateModel(BaseModel):
     @model_validator(mode="after")
     def _check_escalation_consistency(self) -> UnifiedAgentStateModel:
         """If the pipeline has escalated, final_actions should not be empty."""
-        if self.escalated and self.next_agent == AgentName.FINALIZE and not self.final_actions:
+        if (
+            self.escalated
+            and self.next_agent == AgentName.FINALIZE
+            and not self.final_actions
+        ):
             logger.warning(
                 "State is marked escalated at FINALIZE but final_actions is empty — "
                 "this may indicate the finalize node has not yet run."
@@ -309,38 +313,80 @@ class RouterView(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     # Input
-    raw_rows: list[dict] = Field(default_factory=list, description="Raw delivery log rows.")
+    raw_rows: list[dict] = Field(
+        default_factory=list, description="Raw delivery log rows."
+    )
     shipment_id: str = Field(default="", description="Unique shipment identifier.")
 
     # Preprocessor output
-    consolidated_event: dict = Field(default_factory=dict, description="Consolidated shipment event.")
-    customer_profile: dict = Field(default_factory=dict, description="Redacted customer profile (no PII).")
-    customer_profile_full: dict = Field(default_factory=dict, description="Full customer profile with PII.")
-    locker_availability: list[dict] = Field(default_factory=list, description="Locker options in delivery zip.")
-    playbook_context: list[dict] = Field(default_factory=list, description="Playbook chunks from vector search.")
-    escalation_signals: dict = Field(default_factory=dict, description="Deterministic escalation rule output.")
-    noise_override: bool = Field(default=False, description="True if event is routine noise.")
-    guardrail_triggered: bool = Field(default=False, description="True if injection detected.")
+    consolidated_event: dict = Field(
+        default_factory=dict, description="Consolidated shipment event."
+    )
+    customer_profile: dict = Field(
+        default_factory=dict, description="Redacted customer profile (no PII)."
+    )
+    customer_profile_full: dict = Field(
+        default_factory=dict, description="Full customer profile with PII."
+    )
+    locker_availability: list[dict] = Field(
+        default_factory=list, description="Locker options in delivery zip."
+    )
+    playbook_context: list[dict] = Field(
+        default_factory=list, description="Playbook chunks from vector search."
+    )
+    escalation_signals: dict = Field(
+        default_factory=dict, description="Deterministic escalation rule output."
+    )
+    noise_override: bool = Field(
+        default=False, description="True if event is routine noise."
+    )
+    guardrail_triggered: bool = Field(
+        default=False, description="True if injection detected."
+    )
 
     # Resolution
-    resolution_output: dict = Field(default_factory=dict, description="Resolution Agent output.")
-    critic_resolution_output: dict = Field(default_factory=dict, description="Critic verdict on resolution.")
-    resolution_revision_count: int = Field(default=0, description="Revision attempt count.")
-    critic_feedback: str = Field(default="", description="Critic feedback for revision.")
+    resolution_output: dict = Field(
+        default_factory=dict, description="Resolution Agent output."
+    )
+    critic_resolution_output: dict = Field(
+        default_factory=dict, description="Critic verdict on resolution."
+    )
+    resolution_revision_count: int = Field(
+        default=0, description="Revision attempt count."
+    )
+    critic_feedback: str = Field(
+        default="", description="Critic feedback for revision."
+    )
 
     # Communication
-    communication_output: dict = Field(default_factory=dict, description="Communication Agent output.")
-    critic_communication_output: dict = Field(default_factory=dict, description="Critic verdict on communication.")
+    communication_output: dict = Field(
+        default_factory=dict, description="Communication Agent output."
+    )
+    critic_communication_output: dict = Field(
+        default_factory=dict, description="Critic verdict on communication."
+    )
 
     # Routing & final
     next_agent: str = Field(default="preprocessor", description="Next pipeline node.")
     max_loops: int = Field(default=2, description="Max revision loops.")
-    escalated: bool = Field(default=False, description="Whether escalation was triggered.")
-    tool_calls_log: list[str] = Field(default_factory=list, description="Tool invocation log.")
-    trajectory_log: list[str] = Field(default_factory=list, description="Agent decision audit trail.")
-    start_time: Optional[float] = Field(default=None, description="Pipeline start timestamp.")
-    latency_sec: Optional[float] = Field(default=None, description="Total pipeline latency.")
-    final_actions: list[dict] = Field(default_factory=list, description="Final packaged output.")
+    escalated: bool = Field(
+        default=False, description="Whether escalation was triggered."
+    )
+    tool_calls_log: list[str] = Field(
+        default_factory=list, description="Tool invocation log."
+    )
+    trajectory_log: list[str] = Field(
+        default_factory=list, description="Agent decision audit trail."
+    )
+    start_time: Optional[float] = Field(
+        default=None, description="Pipeline start timestamp."
+    )
+    latency_sec: Optional[float] = Field(
+        default=None, description="Total pipeline latency."
+    )
+    final_actions: list[dict] = Field(
+        default_factory=list, description="Final packaged output."
+    )
 
 
 class ResolutionAgentView(BaseModel):
@@ -353,14 +399,29 @@ class ResolutionAgentView(BaseModel):
 
     model_config = ConfigDict(frozen=True)
 
-    consolidated_event: dict = Field(default_factory=dict, description="Consolidated shipment event.")
-    customer_profile: dict = Field(default_factory=dict, description="Redacted customer profile — no name.")
-    locker_availability: list[dict] = Field(default_factory=list, description="Locker options in delivery zip.")
-    playbook_context: list[dict] = Field(default_factory=list, description="Playbook chunks from vector search.")
-    escalation_signals: dict = Field(default_factory=dict, description="Deterministic escalation rule output.")
-    critic_feedback: str = Field(default="", description="Critic feedback guiding this revision attempt.")
+    consolidated_event: dict = Field(
+        default_factory=dict, description="Consolidated shipment event."
+    )
+    customer_profile: dict = Field(
+        default_factory=dict, description="Redacted customer profile — no name."
+    )
+    locker_availability: list[dict] = Field(
+        default_factory=list, description="Locker options in delivery zip."
+    )
+    playbook_context: list[dict] = Field(
+        default_factory=list, description="Playbook chunks from vector search."
+    )
+    escalation_signals: dict = Field(
+        default_factory=dict, description="Deterministic escalation rule output."
+    )
+    critic_feedback: str = Field(
+        default="", description="Critic feedback guiding this revision attempt."
+    )
     # Output owned by this agent
-    resolution_output: dict = Field(default_factory=dict, description="Resolution Agent output: {is_exception, resolution, rationale}.")
+    resolution_output: dict = Field(
+        default_factory=dict,
+        description="Resolution Agent output: {is_exception, resolution, rationale}.",
+    )
 
 
 class CommunicationAgentView(BaseModel):
@@ -372,12 +433,24 @@ class CommunicationAgentView(BaseModel):
 
     model_config = ConfigDict(frozen=True)
 
-    consolidated_event: dict = Field(default_factory=dict, description="Consolidated shipment event.")
-    customer_profile_full: dict = Field(default_factory=dict, description="Full customer profile including name — only this agent has PII access.")
-    locker_availability: list[dict] = Field(default_factory=list, description="Locker options in delivery zip.")
-    resolution_output: dict = Field(default_factory=dict, description="Resolution Agent output to inform messaging.")
+    consolidated_event: dict = Field(
+        default_factory=dict, description="Consolidated shipment event."
+    )
+    customer_profile_full: dict = Field(
+        default_factory=dict,
+        description="Full customer profile including name — only this agent has PII access.",
+    )
+    locker_availability: list[dict] = Field(
+        default_factory=list, description="Locker options in delivery zip."
+    )
+    resolution_output: dict = Field(
+        default_factory=dict, description="Resolution Agent output to inform messaging."
+    )
     # Output owned by this agent
-    communication_output: dict = Field(default_factory=dict, description="Communication Agent output: {tone_label, communication_message}.")
+    communication_output: dict = Field(
+        default_factory=dict,
+        description="Communication Agent output: {tone_label, communication_message}.",
+    )
 
 
 class CriticResolutionView(BaseModel):
@@ -389,14 +462,28 @@ class CriticResolutionView(BaseModel):
 
     model_config = ConfigDict(frozen=True)
 
-    consolidated_event: dict = Field(default_factory=dict, description="Consolidated shipment event.")
-    customer_profile: dict = Field(default_factory=dict, description="Redacted customer profile — no name.")
-    locker_availability: list[dict] = Field(default_factory=list, description="Locker options in delivery zip.")
-    playbook_context: list[dict] = Field(default_factory=list, description="Playbook chunks from vector search.")
-    escalation_signals: dict = Field(default_factory=dict, description="Deterministic escalation rule output.")
-    resolution_output: dict = Field(default_factory=dict, description="Resolution Agent output to validate.")
+    consolidated_event: dict = Field(
+        default_factory=dict, description="Consolidated shipment event."
+    )
+    customer_profile: dict = Field(
+        default_factory=dict, description="Redacted customer profile — no name."
+    )
+    locker_availability: list[dict] = Field(
+        default_factory=list, description="Locker options in delivery zip."
+    )
+    playbook_context: list[dict] = Field(
+        default_factory=list, description="Playbook chunks from vector search."
+    )
+    escalation_signals: dict = Field(
+        default_factory=dict, description="Deterministic escalation rule output."
+    )
+    resolution_output: dict = Field(
+        default_factory=dict, description="Resolution Agent output to validate."
+    )
     # Output owned by this agent
-    critic_resolution_output: dict = Field(default_factory=dict, description="Critic verdict: {decision, rationale}.")
+    critic_resolution_output: dict = Field(
+        default_factory=dict, description="Critic verdict: {decision, rationale}."
+    )
 
 
 class CriticCommunicationView(BaseModel):
@@ -408,12 +495,22 @@ class CriticCommunicationView(BaseModel):
 
     model_config = ConfigDict(frozen=True)
 
-    consolidated_event: dict = Field(default_factory=dict, description="Consolidated shipment event.")
-    customer_profile: dict = Field(default_factory=dict, description="Redacted customer profile — no name.")
-    resolution_output: dict = Field(default_factory=dict, description="Resolution Agent output for context.")
-    communication_output: dict = Field(default_factory=dict, description="Communication Agent output to validate.")
+    consolidated_event: dict = Field(
+        default_factory=dict, description="Consolidated shipment event."
+    )
+    customer_profile: dict = Field(
+        default_factory=dict, description="Redacted customer profile — no name."
+    )
+    resolution_output: dict = Field(
+        default_factory=dict, description="Resolution Agent output for context."
+    )
+    communication_output: dict = Field(
+        default_factory=dict, description="Communication Agent output to validate."
+    )
     # Output owned by this agent
-    critic_communication_output: dict = Field(default_factory=dict, description="Critic verdict: {decision, rationale}.")
+    critic_communication_output: dict = Field(
+        default_factory=dict, description="Critic verdict: {decision, rationale}."
+    )
 
 
 # ═══════════════════════════════════════════════════════════════════════════

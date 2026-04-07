@@ -166,7 +166,9 @@ class PipelineManager:
         FastAPI event loop stays responsive.
         """
         if not self._initialized:
-            raise RuntimeError("PipelineManager not initialized — call initialize() first")
+            raise RuntimeError(
+                "PipelineManager not initialized — call initialize() first"
+            )
 
         config_metadata: dict[str, Any] = {}
         if trace_id:
@@ -190,5 +192,7 @@ class PipelineManager:
     ) -> UnifiedAgentState:
         """Synchronous variant for CLI usage."""
         if not self._initialized:
-            raise RuntimeError("PipelineManager not initialized — call initialize() first")
+            raise RuntimeError(
+                "PipelineManager not initialized — call initialize() first"
+            )
         return run_workflow(self.app, shipment_id, raw_rows, max_loops=max_loops)

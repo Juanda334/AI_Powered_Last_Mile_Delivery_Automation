@@ -1,4 +1,5 @@
 """Unit tests for components/evaluation_metrics.py."""
+
 from __future__ import annotations
 
 import pytest
@@ -25,7 +26,11 @@ pytestmark = pytest.mark.unit
 
 
 def test_task_completion_exception_all_correct():
-    gt = {"is_exception": "YES", "expected_resolution": "REPLACE", "expected_tone": "FORMAL"}
+    gt = {
+        "is_exception": "YES",
+        "expected_resolution": "REPLACE",
+        "expected_tone": "FORMAL",
+    }
     pred = {
         "resolution_output": {"is_exception": "YES", "resolution": "REPLACE"},
         "communication_output": {"tone_label": "FORMAL"},
@@ -46,7 +51,11 @@ def test_task_completion_noise_case_skips_tone():
 
 
 def test_task_completion_wrong_resolution_fails_task():
-    gt = {"is_exception": "YES", "expected_resolution": "REPLACE", "expected_tone": "FORMAL"}
+    gt = {
+        "is_exception": "YES",
+        "expected_resolution": "REPLACE",
+        "expected_tone": "FORMAL",
+    }
     pred = {
         "resolution_output": {"is_exception": "YES", "resolution": "RESCHEDULE"},
         "communication_output": {"tone_label": "FORMAL"},
@@ -57,7 +66,11 @@ def test_task_completion_wrong_resolution_fails_task():
 
 
 def test_task_completion_case_insensitive():
-    gt = {"is_exception": "yes", "expected_resolution": "replace", "expected_tone": "formal"}
+    gt = {
+        "is_exception": "yes",
+        "expected_resolution": "replace",
+        "expected_tone": "formal",
+    }
     pred = {
         "resolution_output": {"is_exception": "YES", "resolution": "REPLACE"},
         "communication_output": {"tone_label": "FORMAL"},
@@ -71,19 +84,31 @@ def test_task_completion_case_insensitive():
 
 
 def test_escalation_accuracy_match_yes():
-    assert compute_escalation_accuracy({"should_escalate": "YES"}, {"escalated": True}) is True
+    assert (
+        compute_escalation_accuracy({"should_escalate": "YES"}, {"escalated": True})
+        is True
+    )
 
 
 def test_escalation_accuracy_match_no():
-    assert compute_escalation_accuracy({"should_escalate": "NO"}, {"escalated": False}) is True
+    assert (
+        compute_escalation_accuracy({"should_escalate": "NO"}, {"escalated": False})
+        is True
+    )
 
 
 def test_escalation_accuracy_mismatch():
-    assert compute_escalation_accuracy({"should_escalate": "YES"}, {"escalated": False}) is False
+    assert (
+        compute_escalation_accuracy({"should_escalate": "YES"}, {"escalated": False})
+        is False
+    )
 
 
 def test_escalation_accuracy_na_returns_none():
-    assert compute_escalation_accuracy({"should_escalate": "N/A"}, {"escalated": False}) is None
+    assert (
+        compute_escalation_accuracy({"should_escalate": "N/A"}, {"escalated": False})
+        is None
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -294,7 +319,9 @@ def test_aggregate_results_all_passing(make_single_case_report):
 def test_aggregate_results_mixed(make_single_case_report):
     reports = [
         make_single_case_report(task_complete=True, latency_sec=1.0),
-        make_single_case_report(task_complete=False, exception_correct=False, latency_sec=3.0),
+        make_single_case_report(
+            task_complete=False, exception_correct=False, latency_sec=3.0
+        ),
         make_single_case_report(task_complete=True, latency_sec=2.0),
     ]
     br = aggregate_results(reports)

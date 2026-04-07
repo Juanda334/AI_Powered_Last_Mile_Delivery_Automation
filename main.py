@@ -82,9 +82,9 @@ def _print_single_result(result: dict) -> None:
     res = result.get("resolution_output", {}) or {}
     comm = result.get("communication_output", {}) or {}
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"  Shipment: {result.get('shipment_id', 'N/A')}")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     # Resolution
     print("\n--- Resolution ---")
@@ -140,9 +140,7 @@ def cmd_query(args: argparse.Namespace) -> int:
         logs = load_delivery_logs(args.logs)
         raw_rows = logs.get(args.shipment_id)
         if not raw_rows:
-            logger.error(
-                "Shipment %s not found in %s", args.shipment_id, args.logs
-            )
+            logger.error("Shipment %s not found in %s", args.shipment_id, args.logs)
             return 1
 
         logger.info(
@@ -195,9 +193,9 @@ def cmd_batch(args: argparse.Namespace) -> int:
         if args.print_each:
             gt_map = load_ground_truth(args.gt)
             for rec in batch.runs:
-                print(f"\n{'='*60}")
+                print(f"\n{'=' * 60}")
                 print(f"  {rec.shipment_id}")
-                print(f"{'='*60}")
+                print(f"{'=' * 60}")
                 gt = gt_map.get(rec.shipment_id)
                 if gt is not None:
                     print_test_case_output(rec, gt)

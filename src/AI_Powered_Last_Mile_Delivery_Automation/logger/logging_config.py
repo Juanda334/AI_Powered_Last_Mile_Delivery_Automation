@@ -78,7 +78,9 @@ def setup_run_logging() -> str | None:
         if _run_dir is not None:
             return _run_dir
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        _run_dir = os.path.join("logs", f"ai_powered_last_mile_delivery_automation_{timestamp}")
+        _run_dir = os.path.join(
+            "logs", f"ai_powered_last_mile_delivery_automation_{timestamp}"
+        )
         try:
             os.makedirs(_run_dir, exist_ok=True)
         except OSError:
@@ -98,7 +100,9 @@ def get_module_logger(module_name: str) -> logging.Logger:
     """
     run_dir = setup_run_logging()
 
-    logger = logging.getLogger(f"AI_Powered_Last_Mile_Delivery_Automation.{module_name}")
+    logger = logging.getLogger(
+        f"AI_Powered_Last_Mile_Delivery_Automation.{module_name}"
+    )
     logger.setLevel(logging.INFO)
 
     # Avoid adding duplicate handlers on repeated imports.

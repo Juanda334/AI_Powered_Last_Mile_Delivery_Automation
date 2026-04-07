@@ -1,4 +1,5 @@
 """Unit tests for utils/agent_states_view.py — state contract + view projections."""
+
 from __future__ import annotations
 
 import pytest

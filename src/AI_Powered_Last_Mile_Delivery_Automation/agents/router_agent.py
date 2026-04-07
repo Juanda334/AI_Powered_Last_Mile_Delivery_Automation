@@ -386,9 +386,7 @@ def fetch_context(
         escalation_signals = tools.get_tool("check_escalation_rules").invoke(
             {
                 "customer_tier": customer_profile.get("tier", "STANDARD"),
-                "exceptions_last_90d": customer_profile.get(
-                    "exceptions_last_90d", 0
-                ),
+                "exceptions_last_90d": customer_profile.get("exceptions_last_90d", 0),
                 "attempt_number": consolidated["attempt_number"],
                 "package_type": consolidated["package_type"],
                 "status_code": consolidated["status_code"],
@@ -527,9 +525,7 @@ def preprocessor_node(
 
         # Step 6: Scan retrieved playbook chunks for injection
         if scan_chunks_for_injection(context["playbook_context"]):
-            tool_log.append(
-                "GUARDRAIL: Injection detected in retrieved playbook chunk"
-            )
+            tool_log.append("GUARDRAIL: Injection detected in retrieved playbook chunk")
             trajectory.append(
                 "preprocessor: Guardrail triggered - injection in RAG chunk"
             )
@@ -583,9 +579,7 @@ def preprocessor_node(
             "guardrail_triggered": True,
             "escalated": True,
             "next_agent": AgentName.FINALIZE,
-            "trajectory_log": [
-                f"preprocessor: FATAL ERROR — {str(exc)[:200]}"
-            ],
+            "trajectory_log": [f"preprocessor: FATAL ERROR — {str(exc)[:200]}"],
             "tool_calls_log": [],
             "start_time": time.time(),
         }
@@ -683,13 +677,10 @@ def orchestrator_node(state: UnifiedAgentState) -> UnifiedAgentState:
             updates["resolution_output"] = {}  # Clear for retry
             updates["critic_resolution_output"] = {}  # Clear for retry
             updates["next_agent"] = AgentName.RESOLUTION
-            traj.append(
-                f"orchestrator: REVISE loop {rev_count}/{max_loops}"
-            )
+            traj.append(f"orchestrator: REVISE loop {rev_count}/{max_loops}")
             updates["trajectory_log"] = traj
             logger.info(
-                "orchestrator_node  route=RESOLUTION  reason=REVISE  "
-                "loop=%d/%d",
+                "orchestrator_node  route=RESOLUTION  reason=REVISE  loop=%d/%d",
                 rev_count,
                 max_loops,
             )
@@ -758,9 +749,7 @@ def orchestrator_node(state: UnifiedAgentState) -> UnifiedAgentState:
             updates["next_agent"] = AgentName.FINALIZE
             traj.append("orchestrator: Not an exception, skipping to finalize")
             updates["trajectory_log"] = traj
-            logger.info(
-                "orchestrator_node  route=FINALIZE  reason=not_exception"
-            )
+            logger.info("orchestrator_node  route=FINALIZE  reason=not_exception")
             return merge_back(state, updates, RouterView)
 
         # 8. Communication Agent hasn't run yet
@@ -768,9 +757,7 @@ def orchestrator_node(state: UnifiedAgentState) -> UnifiedAgentState:
             updates["next_agent"] = AgentName.COMMUNICATION
             if traj != list(view.get("trajectory_log") or []):
                 updates["trajectory_log"] = traj
-            logger.info(
-                "orchestrator_node  route=COMMUNICATION  reason=not_yet_run"
-            )
+            logger.info("orchestrator_node  route=COMMUNICATION  reason=not_yet_run")
             return merge_back(state, updates, RouterView)
 
         # 9. Communication done but Critic hasn't validated yet
@@ -779,8 +766,7 @@ def orchestrator_node(state: UnifiedAgentState) -> UnifiedAgentState:
             if traj != list(view.get("trajectory_log") or []):
                 updates["trajectory_log"] = traj
             logger.info(
-                "orchestrator_node  route=CRITIC_COMMUNICATION  "
-                "reason=not_yet_run"
+                "orchestrator_node  route=CRITIC_COMMUNICATION  reason=not_yet_run"
             )
             return merge_back(state, updates, RouterView)
 
@@ -842,9 +828,7 @@ def finalize_node(state: UnifiedAgentState) -> UnifiedAgentState:
                     "resolution", "ERROR"
                 ),
                 "escalated": view.get("escalated", False),
-                "tone": view.get("communication_output", {}).get(
-                    "tone_label", "N/A"
-                ),
+                "tone": view.get("communication_output", {}).get("tone_label", "N/A"),
                 "message": view.get("communication_output", {}).get(
                     "communication_message", ""
                 ),
@@ -852,13 +836,9 @@ def finalize_node(state: UnifiedAgentState) -> UnifiedAgentState:
                 "guardrail_blocked": False,
             }
 
-        latency = (
-            time.time() - view["start_time"] if view.get("start_time") else 0.0
-        )
+        latency = time.time() - view["start_time"] if view.get("start_time") else 0.0
 
-        traj.append(
-            f"finalize: actions={json.dumps(final)}; latency={latency:.3f}s"
-        )
+        traj.append(f"finalize: actions={json.dumps(final)}; latency={latency:.3f}s")
 
         output: dict[str, Any] = {
             "final_actions": [final],
@@ -978,9 +958,7 @@ def build_router_graph(
         workflow.add_node("resolution_agent", _placeholder_node("resolution_agent"))
 
     # Communication agent — placeholder until dedicated module is implemented
-    workflow.add_node(
-        "communication_agent", _placeholder_node("communication_agent")
-    )
+    workflow.add_node("communication_agent", _placeholder_node("communication_agent"))
 
     # Critic resolution — uses eval_llm
     if eval_llm is not None:
@@ -988,9 +966,7 @@ def build_router_graph(
         bound_critic_res.__name__ = "critic_resolution"  # type: ignore[attr-defined]
         workflow.add_node("critic_resolution", bound_critic_res)
     else:
-        workflow.add_node(
-            "critic_resolution", _placeholder_node("critic_resolution")
-        )
+        workflow.add_node("critic_resolution", _placeholder_node("critic_resolution"))
 
     # Critic communication — uses eval_llm
     if eval_llm is not None:

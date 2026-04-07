@@ -130,15 +130,17 @@ _SAFE_PROFILE_KEYS: tuple[str, ...] = (
 
 # Keys from the consolidated delivery event that should never reach the
 # customer-facing message — internal identifiers and raw log artefacts.
-_NOISY_EVENT_KEYS: frozenset[str] = frozenset({
-    "shipment_id",
-    "tracking_number",
-    "raw_log",
-    "raw_logs",
-    "uuid",
-    "internal_id",
-    "correlation_id",
-})
+_NOISY_EVENT_KEYS: frozenset[str] = frozenset(
+    {
+        "shipment_id",
+        "tracking_number",
+        "raw_log",
+        "raw_logs",
+        "uuid",
+        "internal_id",
+        "correlation_id",
+    }
+)
 
 
 @traceable(name="sanitize_communication_inputs")
@@ -187,15 +189,11 @@ def sanitize_communication_inputs(view: dict[str, Any]) -> dict[str, Any]:
     # locker_availability — must be list of dicts
     la = view.get("locker_availability")
     if isinstance(la, list):
-        clean["locker_availability"] = [
-            item for item in la if isinstance(item, dict)
-        ]
+        clean["locker_availability"] = [item for item in la if isinstance(item, dict)]
     else:
         clean["locker_availability"] = []
 
-    logger.debug(
-        "sanitize_communication_inputs  keys=%s", list(clean.keys())
-    )
+    logger.debug("sanitize_communication_inputs  keys=%s", list(clean.keys()))
     return clean
 
 
@@ -228,9 +226,7 @@ def build_communication_context(view: dict[str, Any]) -> tuple[dict[str, Any], s
     if resolution.get("resolution") == "REROUTE_TO_LOCKER":
         eligible = [loc for loc in lockers if loc.get("eligible")]
         if eligible:
-            locker_info = (
-                f"\nLOCKER FOR REROUTE:\n{json.dumps(eligible[0], indent=2)}"
-            )
+            locker_info = f"\nLOCKER FOR REROUTE:\n{json.dumps(eligible[0], indent=2)}"
 
     # Assemble the context the LLM needs for message generation
     comm_context = {
@@ -312,9 +308,7 @@ def communication_agent_node(
         comm_context, locker_info = build_communication_context(clean)
 
         # 4. Assemble the user message for the LLM
-        user_content = (
-            f"CONTEXT:\n{json.dumps(comm_context, indent=2)}{locker_info}"
-        )
+        user_content = f"CONTEXT:\n{json.dumps(comm_context, indent=2)}{locker_info}"
 
         # 5. Invoke LLM with structured output and retry loop
         structured_llm = gen_llm.with_structured_output(CommunicationOutput)
@@ -325,10 +319,12 @@ def communication_agent_node(
 
         for attempt in range(max_retries):
             try:
-                result = structured_llm.invoke([
-                    SystemMessage(content=COMMUNICATION_AGENT_SYSTEM_PROMPT),
-                    HumanMessage(content=user_content),
-                ])
+                result = structured_llm.invoke(
+                    [
+                        SystemMessage(content=COMMUNICATION_AGENT_SYSTEM_PROMPT),
+                        HumanMessage(content=user_content),
+                    ]
+                )
                 retries_used = attempt
                 break  # Valid output
             except Exception as exc:
@@ -379,9 +375,7 @@ def communication_agent_node(
                 f"communication_agent: all {max_retries} retries exhausted, "
                 "defaulting to generic message with forced escalation"
             )
-        traj.append(
-            f"communication_agent: tone={result.tone_label}"
-        )
+        traj.append(f"communication_agent: tone={result.tone_label}")
         merged["trajectory_log"] = traj
 
         tool_log = list(merged.get("tool_calls_log") or [])
@@ -399,14 +393,10 @@ def communication_agent_node(
         return merged  # type: ignore[return-value]
 
     except Exception as exc:
-        logger.error(
-            "communication_agent_node fatal error: %s", exc, exc_info=True
-        )
+        logger.error("communication_agent_node fatal error: %s", exc, exc_info=True)
         # Fallback: generic message + escalate to human review
         traj_fallback = list(state.get("trajectory_log") or [])
-        traj_fallback.append(
-            f"communication_agent: FATAL ERROR — {str(exc)[:200]}"
-        )
+        traj_fallback.append(f"communication_agent: FATAL ERROR — {str(exc)[:200]}")
         tool_log_fallback = list(state.get("tool_calls_log") or [])
         tool_log_fallback.append("AGENT: communication_agent invoked")
         fallback: dict[str, Any] = {

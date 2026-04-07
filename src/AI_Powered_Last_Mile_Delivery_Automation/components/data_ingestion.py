@@ -10,8 +10,12 @@ from langchain_community.vectorstores import FAISS
 from langchain_chroma import Chroma
 from AI_Powered_Last_Mile_Delivery_Automation.utils.model_loader import ModelLoader
 from AI_Powered_Last_Mile_Delivery_Automation.utils.config_loader import load_config
-from AI_Powered_Last_Mile_Delivery_Automation.logger.logging_config import get_module_logger
-from AI_Powered_Last_Mile_Delivery_Automation.exceptions.exception import DocumentPortalException
+from AI_Powered_Last_Mile_Delivery_Automation.logger.logging_config import (
+    get_module_logger,
+)
+from AI_Powered_Last_Mile_Delivery_Automation.exceptions.exception import (
+    DocumentPortalException,
+)
 from AI_Powered_Last_Mile_Delivery_Automation.utils.document_ops import load_documents
 import json
 import os
@@ -26,7 +30,9 @@ _PROJECT_ROOT = (
     if "PROJECT_ROOT" in os.environ
     else Path(__file__).resolve().parents[3]
 )
-_EXTERNAL_DOC = _PROJECT_ROOT / "data" / "external" / "exception_resolution_playbook.pdf"
+_EXTERNAL_DOC = (
+    _PROJECT_ROOT / "data" / "external" / "exception_resolution_playbook.pdf"
+)
 _EXTERNAL_DB = _PROJECT_ROOT / "data" / "external" / "customers.db"
 _PROCESSED_DIR = _PROJECT_ROOT / "data" / "processed"
 
@@ -52,7 +58,9 @@ class DataIngestor:
             )
         except Exception as e:
             logger.error(f"Failed to initialize DataIngestor: {e}")
-            raise DocumentPortalException("Initialization error in DataIngestor", e) from e
+            raise DocumentPortalException(
+                "Initialization error in DataIngestor", e
+            ) from e
 
     # ── ChromaDB connection ──────────────────────────────────────────────
 
@@ -78,7 +86,9 @@ class DataIngestor:
         """Split documents into chunks using config-driven parameters."""
         chunk_size = self.text_splitter_cfg.get("chunk_size", 1500)
         chunk_overlap = self.text_splitter_cfg.get("chunk_overlap", 300)
-        separators = self.text_splitter_cfg.get("separators", ["\n\n", "\n", ". ", " ", ""])
+        separators = self.text_splitter_cfg.get(
+            "separators", ["\n\n", "\n", ". ", " ", ""]
+        )
 
         splitter = RecursiveCharacterTextSplitter(
             chunk_size=chunk_size,
@@ -86,12 +96,16 @@ class DataIngestor:
             separators=separators,
         )
         chunks = splitter.split_documents(docs)
-        logger.info(f"Documents split: {len(chunks)} chunks (chunk_size={chunk_size}, overlap={chunk_overlap})")
+        logger.info(
+            f"Documents split: {len(chunks)} chunks (chunk_size={chunk_size}, overlap={chunk_overlap})"
+        )
         return chunks
 
     # ── Idempotent ChromaDB collection ───────────────────────────────────
 
-    def _get_or_create_collection(self, client: ClientAPI, chunks: List[Document]) -> Chroma:
+    def _get_or_create_collection(
+        self, client: ClientAPI, chunks: List[Document]
+    ) -> Chroma:
         """Get existing ChromaDB collection or create from chunks (idempotent)."""
         existing_collections = [c.name for c in client.list_collections()]
 
@@ -102,7 +116,9 @@ class DataIngestor:
                 embedding_function=self.embeddings,
             )
             count = vector_store._collection.count()
-            logger.info(f"Loaded existing collection '{COLLECTION_NAME}' ({count} chunks)")
+            logger.info(
+                f"Loaded existing collection '{COLLECTION_NAME}' ({count} chunks)"
+            )
         else:
             vector_store = Chroma.from_documents(
                 documents=chunks,
@@ -143,10 +159,16 @@ class DataIngestor:
 
             if search_type == "mmr":
                 search_kwargs["fetch_k"] = self.retriever_cfg.get("fetch_k", 20)
-                search_kwargs["lambda_mult"] = self.retriever_cfg.get("lambda_mult", 0.5)
+                search_kwargs["lambda_mult"] = self.retriever_cfg.get(
+                    "lambda_mult", 0.5
+                )
 
-            logger.info(f"Retriever configured: search_type={search_type}, search_kwargs={search_kwargs}")
-            return vector_store.as_retriever(search_type=search_type, search_kwargs=search_kwargs)
+            logger.info(
+                f"Retriever configured: search_type={search_type}, search_kwargs={search_kwargs}"
+            )
+            return vector_store.as_retriever(
+                search_type=search_type, search_kwargs=search_kwargs
+            )
 
         except Exception as e:
             logger.error(f"Failed to build retriever: {e}")
@@ -169,7 +191,9 @@ class DataIngestor:
                     continue
                 df = pd.read_csv(path)
                 result[name] = df
-                logger.info(f"Loaded '{name}': {df.shape[0]} rows, {df.shape[1]} columns")
+                logger.info(
+                    f"Loaded '{name}': {df.shape[0]} rows, {df.shape[1]} columns"
+                )
 
             return result
         except Exception as e:
@@ -193,7 +217,9 @@ class DataIngestor:
                 for table in tables:
                     df = pd.read_sql_query(f"SELECT * FROM {table}", conn)
                     result[table] = df
-                    logger.info(f"Loaded '{table}': {df.shape[0]} rows, {df.shape[1]} columns")
+                    logger.info(
+                        f"Loaded '{table}': {df.shape[0]} rows, {df.shape[1]} columns"
+                    )
 
             logger.info(f"SQLite load complete: {len(result)} tables")
             return result
@@ -207,6 +233,7 @@ class DataIngestor:
 # FAISS Manager (kept as alternative vector store backend)
 # ══════════════════════════════════════════════════════════════════════════
 
+
 class FaissManager:
     def __init__(self, index_dir: Path, model_loader: Optional[ModelLoader] = None):
         self.index_dir = Path(index_dir)
@@ -217,7 +244,9 @@ class FaissManager:
 
         if self.meta_path.exists():
             try:
-                self._meta = json.loads(self.meta_path.read_text(encoding="utf-8")) or {"rows": {}}
+                self._meta = json.loads(self.meta_path.read_text(encoding="utf-8")) or {
+                    "rows": {}
+                }
             except Exception:
                 self._meta = {"rows": {}}
 
@@ -226,7 +255,9 @@ class FaissManager:
         self.vs: Optional[FAISS] = None
 
     def _exists(self) -> bool:
-        return (self.index_dir / "index.faiss").exists() and (self.index_dir / "index.pkl").exists()
+        return (self.index_dir / "index.faiss").exists() and (
+            self.index_dir / "index.pkl"
+        ).exists()
 
     @staticmethod
     def _fingerprint(text: str, md: Dict[str, Any]) -> str:
@@ -237,7 +268,9 @@ class FaissManager:
         return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
     def _save_meta(self):
-        self.meta_path.write_text(json.dumps(self._meta, ensure_ascii=False, indent=2), encoding="utf-8")
+        self.meta_path.write_text(
+            json.dumps(self._meta, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
 
     def add_documents(self, docs: List[Document]):
         if self.vs is None:
@@ -257,7 +290,9 @@ class FaissManager:
             self._save_meta()
         return len(new_docs)
 
-    def load_or_create(self, texts: Optional[List[str]] = None, metadatas: Optional[List[dict]] = None):
+    def load_or_create(
+        self, texts: Optional[List[str]] = None, metadatas: Optional[List[dict]] = None
+    ):
         if self._exists():
             self.vs = FAISS.load_local(
                 str(self.index_dir),
@@ -267,7 +302,11 @@ class FaissManager:
             return self.vs
 
         if not texts:
-            raise DocumentPortalException("No existing FAISS index and no data to create one", sys)
-        self.vs = FAISS.from_texts(texts=texts, embedding=self.emb, metadatas=metadatas or [])
+            raise DocumentPortalException(
+                "No existing FAISS index and no data to create one", sys
+            )
+        self.vs = FAISS.from_texts(
+            texts=texts, embedding=self.emb, metadatas=metadatas or []
+        )
         self.vs.save_local(str(self.index_dir))
         return self.vs

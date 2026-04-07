@@ -1,4 +1,5 @@
 """Unit tests for resolution_agent.py helpers (no LLM calls)."""
+
 from __future__ import annotations
 
 import pytest

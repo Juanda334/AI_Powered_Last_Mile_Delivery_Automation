@@ -1,16 +1,21 @@
 from __future__ import annotations
-import fitz                                          # PyMuPDF — PDF text extraction
+import fitz  # PyMuPDF — PDF text extraction
 from pathlib import Path
 from typing import Iterable, List
 from langchain_core.documents import Document
 from langchain_community.document_loaders import Docx2txtLoader, TextLoader
-from AI_Powered_Last_Mile_Delivery_Automation.logger.logging_config import get_module_logger
-from AI_Powered_Last_Mile_Delivery_Automation.exceptions.exception import DocumentPortalException
+from AI_Powered_Last_Mile_Delivery_Automation.logger.logging_config import (
+    get_module_logger,
+)
+from AI_Powered_Last_Mile_Delivery_Automation.exceptions.exception import (
+    DocumentPortalException,
+)
 from fastapi import UploadFile
 
 logger = get_module_logger("utils.document_ops")
 
 SUPPORTED_EXTENSIONS = {".pdf", ".docx", ".txt"}
+
 
 def load_pdf_with_pymupdf(pdf_path) -> list:
     """Extract text from a PDF and return LangChain Document objects."""
@@ -38,6 +43,7 @@ def load_pdf_with_pymupdf(pdf_path) -> list:
 
     return documents
 
+
 def load_documents(paths: Iterable[Path]) -> List[Document]:
     """Load docs using appropriate loader based on extension."""
     docs: List[Document] = []
@@ -49,7 +55,9 @@ def load_documents(paths: Iterable[Path]) -> List[Document]:
                     pdf_docs = load_pdf_with_pymupdf(str(p))
                     docs.extend(pdf_docs)
                 except Exception as pdf_err:
-                    logger.warning(f"Failed to load PDF (corrupted or unreadable): {p} — {pdf_err}")
+                    logger.warning(
+                        f"Failed to load PDF (corrupted or unreadable): {p} — {pdf_err}"
+                    )
                     continue
             elif ext == ".docx":
                 loader = Docx2txtLoader(str(p))
@@ -65,10 +73,11 @@ def load_documents(paths: Iterable[Path]) -> List[Document]:
     except Exception as e:
         logger.error(f"Failed loading documents: {str(e)}")
         raise DocumentPortalException("Error loading documents", e) from e
-    
+
 
 class FastAPIFileAdapter:
     """Adapt FastAPI UploadFile to a simple object with .name and .getbuffer()."""
+
     def __init__(self, uf: UploadFile):
         self._uf = uf
         self.name = uf.filename or "file"

@@ -204,24 +204,30 @@ def compute_task_completion(gt: dict, pred: dict) -> TaskCompletionResult:
     """
     try:
         gt_is_exc = str(gt.get("is_exception", "")).strip().upper()
-        pred_is_exc = str(
-            (pred.get("resolution_output") or {}).get("is_exception", "")
-        ).strip().upper()
+        pred_is_exc = (
+            str((pred.get("resolution_output") or {}).get("is_exception", ""))
+            .strip()
+            .upper()
+        )
 
         exception_correct = gt_is_exc == pred_is_exc
 
         gt_res = str(gt.get("expected_resolution", "")).strip().upper()
-        pred_res = str(
-            (pred.get("resolution_output") or {}).get("resolution", "")
-        ).strip().upper()
+        pred_res = (
+            str((pred.get("resolution_output") or {}).get("resolution", ""))
+            .strip()
+            .upper()
+        )
         resolution_correct = gt_res == pred_res
 
         tone_correct: bool | None
         if gt_is_exc == "YES":
             gt_tone = str(gt.get("expected_tone", "")).strip().upper()
-            pred_tone = str(
-                (pred.get("communication_output") or {}).get("tone_label", "")
-            ).strip().upper()
+            pred_tone = (
+                str((pred.get("communication_output") or {}).get("tone_label", ""))
+                .strip()
+                .upper()
+            )
             tone_correct = gt_tone == pred_tone
             task_complete = exception_correct and resolution_correct and tone_correct
         else:
@@ -340,7 +346,7 @@ def _strip_code_fence(text: str) -> str:
         if first_newline != -1:
             t = t[first_newline + 1 :]
         if t.endswith("```"):
-            t = t[: -3]
+            t = t[:-3]
     return t.strip()
 
 
@@ -430,10 +436,7 @@ def compute_token_efficiency(
         total = prompt_total + completion_total
         task_complete = bool(
             (pred.get("_task_complete_hint") is True)
-            or (
-                pred.get("final_actions")
-                and not pred.get("escalated", False)
-            )
+            or (pred.get("final_actions") and not pred.get("escalated", False))
         )
         tokens_per_resolution = float(total) if task_complete and total > 0 else None
 
@@ -559,7 +562,9 @@ def _extract_citations(pred: dict) -> list[str]:
             if page is None:
                 page = (chunk or {}).get("page")
             if page is not None:
-                label = f"Page {int(page) + 1}" if isinstance(page, int) else f"Page {page}"
+                label = (
+                    f"Page {int(page) + 1}" if isinstance(page, int) else f"Page {page}"
+                )
                 if label not in pages:
                     pages.append(label)
         return pages
@@ -765,9 +770,7 @@ def aggregate_results(
     ]
     avg_similarity = statistics.mean(sims) if sims else None
 
-    drift_rate = _rate(
-        sum(1 for r in reports if r.trajectory_drift.drift_flag), n
-    )
+    drift_rate = _rate(sum(1 for r in reports if r.trajectory_drift.drift_flag), n)
 
     # --- Aggregated-metrics extensions ---
     median_latency_sec = statistics.median(latencies) if latencies else 0.0
@@ -781,23 +784,17 @@ def aggregate_results(
     total_cost_usd = round(
         sum(r.token_efficiency.estimated_cost_usd for r in reports), 6
     )
-    failure_count = sum(
-        1 for r in reports if not r.task_completion.task_complete
-    )
+    failure_count = sum(1 for r in reports if not r.task_completion.task_complete)
     failure_rate = _rate(failure_count, n)
     failure_breakdown = compute_failure_categories(reports)
-    latency_per_agent = (
-        compute_latency_per_agent(final_states) if final_states else {}
-    )
+    latency_per_agent = compute_latency_per_agent(final_states) if final_states else {}
 
     batch = BatchReport(
         n=n,
         task_completion_rate=_rate(task_complete, n),
         exception_detection_rate=_rate(exc_correct, n),
         resolution_accuracy=_rate(res_correct, n),
-        tone_accuracy=_rate(tone_correct, len(tone_eligible))
-        if tone_eligible
-        else 0.0,
+        tone_accuracy=_rate(tone_correct, len(tone_eligible)) if tone_eligible else 0.0,
         tool_call_accuracy=_rate(tool_correct, n),
         escalation_accuracy=escalation_accuracy,
         avg_coherence=avg_coherence,
@@ -844,19 +841,13 @@ def print_batch_report(batch_report: BatchReport) -> None:
     exc = int(round(batch_report.exception_detection_rate * n))
     res = int(round(batch_report.resolution_accuracy * n))
     tool = int(round(batch_report.tool_call_accuracy * n))
-    print(
-        f"Task Completion:      {tcc}/{n} ({batch_report.task_completion_rate:.0%})"
-    )
+    print(f"Task Completion:      {tcc}/{n} ({batch_report.task_completion_rate:.0%})")
     print(
         f"  Exception Detection:  {exc}/{n} ({batch_report.exception_detection_rate:.0%})"
     )
-    print(
-        f"  Resolution Accuracy:  {res}/{n} ({batch_report.resolution_accuracy:.0%})"
-    )
+    print(f"  Resolution Accuracy:  {res}/{n} ({batch_report.resolution_accuracy:.0%})")
     print(f"  Tone Accuracy:        {batch_report.tone_accuracy:.0%}")
-    print(
-        f"Tool Call Accuracy:   {tool}/{n} ({batch_report.tool_call_accuracy:.0%})"
-    )
+    print(f"Tool Call Accuracy:   {tool}/{n} ({batch_report.tool_call_accuracy:.0%})")
     if batch_report.escalation_accuracy is None:
         print("Escalation Accuracy:  N/A (no applicable cases)")
     else:
@@ -874,9 +865,7 @@ def print_batch_report(batch_report: BatchReport) -> None:
         if nonzero:
             print(f"  Failure Breakdown:  {nonzero}")
     if batch_report.latency_per_agent:
-        rendered = {
-            k: round(v, 3) for k, v in batch_report.latency_per_agent.items()
-        }
+        rendered = {k: round(v, 3) for k, v in batch_report.latency_per_agent.items()}
         print(f"Latency per Agent:    {rendered}")
     if batch_report.avg_tokens_per_case is not None:
         print(f"Avg Tokens/Case:      {batch_report.avg_tokens_per_case:.0f}")
@@ -891,9 +880,7 @@ def print_batch_report(batch_report: BatchReport) -> None:
 # ═══════════════════════════════════════════════════════════════════════════
 
 
-def log_to_langsmith(
-    report: SingleCaseReport, run_id: str | None = None
-) -> None:
+def log_to_langsmith(report: SingleCaseReport, run_id: str | None = None) -> None:
     """Push per-metric scores to LangSmith as feedback (silent no-op on failure).
 
     Wraps ``langsmith.Client().create_feedback`` — if LangSmith is not
@@ -920,9 +907,7 @@ def log_to_langsmith(
             feedback_map["latency_sec"] = report.latency_sec
 
         if run_id is None:
-            logger.debug(
-                "log_to_langsmith: no run_id provided; skipping feedback push"
-            )
+            logger.debug("log_to_langsmith: no run_id provided; skipping feedback push")
             return
 
         for key, value in feedback_map.items():

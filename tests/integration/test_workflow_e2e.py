@@ -6,6 +6,7 @@ compiled LangGraph app. This keeps the tests hermetic while still
 verifying the error boundaries and batch isolation that production
 relies on.
 """
+
 from __future__ import annotations
 
 import pytest

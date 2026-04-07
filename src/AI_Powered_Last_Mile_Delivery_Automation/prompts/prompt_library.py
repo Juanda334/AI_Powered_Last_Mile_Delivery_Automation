@@ -1,4 +1,3 @@
-
 RESOLUTION_AGENT_SYSTEM_PROMPT = """
 You are the Resolution Agent in a last-mile delivery exception handling system.
 Your task is to analyze delivery events and determine whether they are actionable

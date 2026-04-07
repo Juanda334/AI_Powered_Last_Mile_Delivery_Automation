@@ -1,4 +1,5 @@
 """Unit tests for components/prepare_test_cases.py — loaders + persistence."""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -73,7 +74,9 @@ def test_load_delivery_logs_preserves_insertion_order(sample_logs_path: Path):
 # ---------------------------------------------------------------------------
 
 
-def test_build_test_cases_pairs_logs_with_gt(sample_logs_path: Path, sample_gt_path: Path):
+def test_build_test_cases_pairs_logs_with_gt(
+    sample_logs_path: Path, sample_gt_path: Path
+):
     cases = build_test_cases(sample_logs_path, sample_gt_path)
     assert len(cases) == 3
     ids = [c.shipment_id for c in cases]

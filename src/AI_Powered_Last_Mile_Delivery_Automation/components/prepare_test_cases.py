@@ -334,8 +334,10 @@ def run_batch(
         rec = run_test_case(
             app, tc, eval_llm=eval_llm, embedder=embedder, max_loops=max_loops
         )
-        status = "FAIL" if rec.error else (
-            "PASS" if rec.report.task_completion.task_complete else "MISS"
+        status = (
+            "FAIL"
+            if rec.error
+            else ("PASS" if rec.report.task_completion.task_complete else "MISS")
         )
         logger.info(
             "[%d/%d] %s %s task_complete=%s coherence=%d (%.2fs)",
@@ -391,9 +393,7 @@ def load_batch(path: Path | str) -> TestRunBatch:
 # ═══════════════════════════════════════════════════════════════════════════
 
 
-def print_test_case_output(
-    record: TestRunRecord, gt: GroundTruthCase
-) -> None:
+def print_test_case_output(record: TestRunRecord, gt: GroundTruthCase) -> None:
     """Console-print a single test case (notebook-parity layout)."""
     state = record.final_state or {}
     res = state.get("resolution_output", {}) or {}
@@ -404,18 +404,14 @@ def print_test_case_output(
     print("--- Predictions ---")
     print(f"  Exception:  {res.get('is_exception', 'N/A')} (GT: {gt.is_exception})")
     print(
-        f"  Resolution: {res.get('resolution', 'N/A')} "
-        f"(GT: {gt.expected_resolution})"
+        f"  Resolution: {res.get('resolution', 'N/A')} (GT: {gt.expected_resolution})"
     )
     pred_esc = "YES" if state.get("escalated") else "NO"
     print(f"  Escalated:  {pred_esc} (GT: {gt.should_escalate})")
-    print(
-        f"  Tone:       {comm.get('tone_label', 'N/A')} (GT: {gt.expected_tone})"
-    )
+    print(f"  Tone:       {comm.get('tone_label', 'N/A')} (GT: {gt.expected_tone})")
     print(f"  Revisions:  {state.get('resolution_revision_count', 0)}")
     print(
-        f"  Guardrail:  "
-        f"{'TRIGGERED' if state.get('guardrail_triggered') else 'CLEAR'}"
+        f"  Guardrail:  {'TRIGGERED' if state.get('guardrail_triggered') else 'CLEAR'}"
     )
 
     # --- Per-metric pass/fail breakdown ---
@@ -424,9 +420,7 @@ def print_test_case_output(
     print(f"    Exception ID:      {'PASS' if tc.exception_correct else 'FAIL'}")
     print(f"    Resolution:        {'PASS' if tc.resolution_correct else 'FAIL'}")
     tone_str = (
-        "N/A"
-        if tc.tone_correct is None
-        else ("PASS" if tc.tone_correct else "FAIL")
+        "N/A" if tc.tone_correct is None else ("PASS" if tc.tone_correct else "FAIL")
     )
     print(f"    Tone:              {tone_str}")
     esc = record.report.escalation_correct
@@ -438,7 +432,11 @@ def print_test_case_output(
     )
     print(f"  Coherence Score:     {record.report.coherence.score}/5")
     latency = record.report.latency_sec
-    print(f"  Latency:             {latency:.2f}s" if latency is not None else "  Latency:             N/A")
+    print(
+        f"  Latency:             {latency:.2f}s"
+        if latency is not None
+        else "  Latency:             N/A"
+    )
 
     # --- Full agent decision trail ---
     print("\n--- Trajectory ---")
@@ -448,9 +446,7 @@ def print_test_case_output(
     # --- Which playbook pages were retrieved ---
     print("\n--- Document Citations ---")
     cites = record.report.citations
-    print(
-        f"  Playbook pages referenced: {', '.join(cites) if cites else 'None'}"
-    )
+    print(f"  Playbook pages referenced: {', '.join(cites) if cites else 'None'}")
 
     # --- Preview of the customer notification if generated ---
     msg = comm.get("communication_message") or ""
@@ -520,11 +516,7 @@ def _main() -> int:  # pragma: no cover — CLI glue
             print(f"\n=== {rec.shipment_id} ===")
             # Look up the matching GT case
             gt = next(
-                (
-                    c.ground_truth
-                    for c in cases
-                    if c.shipment_id == rec.shipment_id
-                ),
+                (c.ground_truth for c in cases if c.shipment_id == rec.shipment_id),
                 None,
             )
             if gt is not None:

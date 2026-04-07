@@ -1,4 +1,5 @@
 """Unit tests for router_agent.py pure helpers (no LLM calls)."""
+
 from __future__ import annotations
 
 import pytest
@@ -142,7 +143,10 @@ def test_noise_override_routine_delivered_is_noise():
 
 
 def test_noise_override_delivered_with_damage_is_not_noise():
-    ev = {"status_code": "DELIVERED", "status_description": "package damaged during transit"}
+    ev = {
+        "status_code": "DELIVERED",
+        "status_description": "package damaged during transit",
+    }
     assert check_noise_override(ev) is False
 
 

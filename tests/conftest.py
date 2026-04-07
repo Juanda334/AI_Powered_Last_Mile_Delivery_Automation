@@ -4,6 +4,7 @@ All fixtures are deterministic and free of network I/O. Smoke tests
 that need real infrastructure define their own fixtures inline and
 skip when creds are absent.
 """
+
 from __future__ import annotations
 
 import json

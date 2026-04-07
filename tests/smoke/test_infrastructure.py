@@ -4,6 +4,7 @@ These tests are **opt-in** via ``pytest -m smoke`` and skip cleanly
 when credentials or data files are absent, so they never block a CI
 job that lacks secrets.
 """
+
 from __future__ import annotations
 
 import os
@@ -69,9 +70,7 @@ def test_sqlite_customers_db_reachable(project_root: Path):
         pytest.skip(f"customers.db not present at {db}")
     conn = sqlite3.connect(str(db))
     try:
-        cur = conn.execute(
-            "SELECT name FROM sqlite_master WHERE type='table' LIMIT 10"
-        )
+        cur = conn.execute("SELECT name FROM sqlite_master WHERE type='table' LIMIT 10")
         tables = {r[0] for r in cur.fetchall()}
         # We expect at least one of these tables in a valid db
         assert tables, "customers.db has no tables"

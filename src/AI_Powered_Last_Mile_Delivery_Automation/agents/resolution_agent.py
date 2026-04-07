@@ -113,13 +113,9 @@ class ResolutionOutput(BaseModel):
     def validate_consistency(self) -> ResolutionOutput:
         """Ensure is_exception and resolution are mutually consistent."""
         if self.is_exception == "YES" and self.resolution == "N/A":
-            raise ValueError(
-                "resolution cannot be N/A when is_exception is YES"
-            )
+            raise ValueError("resolution cannot be N/A when is_exception is YES")
         if self.is_exception == "NO" and self.resolution != "N/A":
-            raise ValueError(
-                "resolution must be N/A when is_exception is NO"
-            )
+            raise ValueError("resolution must be N/A when is_exception is NO")
         return self
 
 
@@ -147,8 +143,7 @@ def format_playbook_context(playbook: list[dict]) -> str:
     if not playbook:
         return "No playbook context available."
     return "\n\n---\n\n".join(
-        f"[Page {c.get('page', '?')}] {c.get('content', '')}"
-        for c in playbook
+        f"[Page {c.get('page', '?')}] {c.get('content', '')}" for c in playbook
     )
 
 
@@ -187,9 +182,7 @@ def sanitize_resolution_inputs(view: dict[str, Any]) -> dict[str, Any]:
     # locker_availability — must be list of dicts
     la = view.get("locker_availability")
     if isinstance(la, list):
-        clean["locker_availability"] = [
-            item for item in la if isinstance(item, dict)
-        ]
+        clean["locker_availability"] = [item for item in la if isinstance(item, dict)]
     else:
         clean["locker_availability"] = []
 
@@ -197,10 +190,7 @@ def sanitize_resolution_inputs(view: dict[str, Any]) -> dict[str, Any]:
     pc = view.get("playbook_context")
     if isinstance(pc, list):
         clean["playbook_context"] = [
-            item
-            for item in pc
-            if isinstance(item, dict)
-            and "content" in item
+            item for item in pc if isinstance(item, dict) and "content" in item
         ]
     else:
         clean["playbook_context"] = []
@@ -300,10 +290,12 @@ def resolution_agent_node(
 
         for attempt in range(max_retries):
             try:
-                result = structured_llm.invoke([
-                    SystemMessage(content=system_prompt),
-                    HumanMessage(content=user_content),
-                ])
+                result = structured_llm.invoke(
+                    [
+                        SystemMessage(content=system_prompt),
+                        HumanMessage(content=user_content),
+                    ]
+                )
                 break  # Valid output
             except Exception as exc:
                 last_error = exc
@@ -357,24 +349,18 @@ def resolution_agent_node(
         merged["next_agent"] = AgentName.RESOLUTION  # orchestrator reads this
 
         logger.info(
-            "resolution_agent_node  is_exception=%s  resolution=%s  "
-            "retries_used=%d",
+            "resolution_agent_node  is_exception=%s  resolution=%s  retries_used=%d",
             result.is_exception,
             result.resolution,
-            max_retries - 1 if last_error and result.resolution != "RESCHEDULE"
-            else 0,
+            max_retries - 1 if last_error and result.resolution != "RESCHEDULE" else 0,
         )
         return merged  # type: ignore[return-value]
 
     except Exception as exc:
-        logger.error(
-            "resolution_agent_node fatal error: %s", exc, exc_info=True
-        )
+        logger.error("resolution_agent_node fatal error: %s", exc, exc_info=True)
         # Fallback: escalate to human review
         traj_fallback = list(state.get("trajectory_log") or [])
-        traj_fallback.append(
-            f"resolution_agent: FATAL ERROR — {str(exc)[:200]}"
-        )
+        traj_fallback.append(f"resolution_agent: FATAL ERROR — {str(exc)[:200]}")
         fallback: dict[str, Any] = {
             "resolution_output": {
                 "is_exception": "YES",

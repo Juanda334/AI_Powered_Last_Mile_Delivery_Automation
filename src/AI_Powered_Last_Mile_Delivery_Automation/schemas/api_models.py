@@ -43,7 +43,9 @@ class BatchQueryRequest(BaseModel):
         if not self.queries and not self.dataset_path:
             raise ValueError("Provide either 'queries' or 'dataset_path'")
         if self.queries and self.dataset_path:
-            raise ValueError("Provide only one of 'queries' or 'dataset_path', not both")
+            raise ValueError(
+                "Provide only one of 'queries' or 'dataset_path', not both"
+            )
         return self
 
 
