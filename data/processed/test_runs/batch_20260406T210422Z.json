@@ -1,0 +1,1824 @@
+{
+  "runs": [
+    {
+      "shipment_id": "SHP-001",
+      "final_state": {
+        "raw_rows": [
+          {
+            "shipment_id": "SHP-001",
+            "timestamp": "2026-03-05T10:14:00",
+            "status_code": "DELIVERED",
+            "status_description": "Left at front door, signed by resident",
+            "customer_id": "CUST-003",
+            "delivery_address": "27 Maple Drive, Greenfield, 10001",
+            "package_type": "STANDARD",
+            "package_size": "SMALL",
+            "attempt_number": "1",
+            "is_duplicate_scan": "False"
+          }
+        ],
+        "shipment_id": "SHP-001",
+        "consolidated_event": {
+          "shipment_id": "SHP-001",
+          "timestamp": "2026-03-05T10:14:00",
+          "status_code": "DELIVERED",
+          "status_description": "Left at front door, signed by resident",
+          "customer_id": "CUST-003",
+          "delivery_address": "27 Maple Drive, Greenfield, 10001",
+          "package_type": "STANDARD",
+          "package_size": "SMALL",
+          "attempt_number": 1,
+          "prior_attempt_notes": [],
+          "total_rows": 1,
+          "duplicates_removed": 0
+        },
+        "customer_profile": {},
+        "customer_profile_full": {},
+        "locker_availability": [],
+        "playbook_context": [],
+        "escalation_signals": {},
+        "noise_override": true,
+        "guardrail_triggered": false,
+        "resolution_output": {
+          "is_exception": "NO",
+          "resolution": "N/A",
+          "rationale": "Status code DELIVERED with routine description. No anomaly indicators. Classified as noise by preprocessor guardrail."
+        },
+        "critic_resolution_output": {},
+        "resolution_revision_count": 0,
+        "critic_feedback": "",
+        "communication_output": {},
+        "critic_communication_output": {},
+        "next_agent": "END",
+        "max_loops": 2,
+        "escalated": false,
+        "tool_calls_log": [
+          "PREPROCESSOR: Deduplicated rows",
+          "PREPROCESSOR: Noise guardrail - routine status with no anomaly"
+        ],
+        "trajectory_log": [
+          "preprocessor: 1 raw rows -> 1 after dedup",
+          "preprocessor: DELIVERED flagged as noise by guardrail, skipping tool calls",
+          "orchestrator: Noise override from preprocessor, skipping to finalize",
+          "finalize: actions={\"shipment_id\": \"SHP-001\", \"is_exception\": \"NO\", \"resolution\": \"N/A\", \"escalated\": false, \"tone\": \"N/A\", \"message\": \"\", \"revision_count\": 0, \"guardrail_blocked\": false}; latency=0.025s"
+        ],
+        "start_time": 1775509344.14796,
+        "latency_sec": 0.025424957275390625,
+        "final_actions": [
+          {
+            "shipment_id": "SHP-001",
+            "is_exception": "NO",
+            "resolution": "N/A",
+            "escalated": false,
+            "tone": "N/A",
+            "message": "",
+            "revision_count": 0,
+            "guardrail_blocked": false
+          }
+        ]
+      },
+      "report": {
+        "shipment_id": "SHP-001",
+        "task_completion": {
+          "exception_correct": true,
+          "resolution_correct": true,
+          "tone_correct": null,
+          "task_complete": true
+        },
+        "escalation_correct": null,
+        "tool_call_correct": false,
+        "coherence": {
+          "score": 5,
+          "justification": "All decisions are logically consistent with a clear rationale chain, as the shipment was correctly identified as non-exceptional and processed accordingly."
+        },
+        "token_efficiency": {
+          "prompt_tokens": 0,
+          "completion_tokens": 0,
+          "total_tokens": 0,
+          "estimated_cost_usd": 0.0,
+          "tokens_per_resolution": null
+        },
+        "trajectory_drift": {
+          "trajectory_len": 4,
+          "tool_calls_len": 2,
+          "revision_count": 0,
+          "drift_flag": false
+        },
+        "semantic_similarity": {
+          "similarity": 0.0,
+          "golden_present": false
+        },
+        "latency_sec": 0.025424957275390625,
+        "citations": []
+      },
+      "error": null,
+      "duration_sec": 1.9566,
+      "timestamp": "2026-04-06T21:02:24+00:00"
+    },
+    {
+      "shipment_id": "SHP-002",
+      "final_state": {
+        "raw_rows": [
+          {
+            "shipment_id": "SHP-002",
+            "timestamp": "2026-03-05T11:05:00",
+            "status_code": "ATTEMPTED",
+            "status_description": "Nobody home rang bell twice no answer left notice on door",
+            "customer_id": "CUST-001",
+            "delivery_address": "140 Birch Lane, Westdale, 10003",
+            "package_type": "STANDARD",
+            "package_size": "MEDIUM",
+            "attempt_number": "1",
+            "is_duplicate_scan": "False"
+          },
+          {
+            "shipment_id": "SHP-002",
+            "timestamp": "2026-03-05T11:07:00",
+            "status_code": "ATTEMPTED",
+            "status_description": "Nobody home rang bell twice no answer left notice on door",
+            "customer_id": "CUST-001",
+            "delivery_address": "140 Birch Lane, Westdale, 10003",
+            "package_type": "STANDARD",
+            "package_size": "MEDIUM",
+            "attempt_number": "1",
+            "is_duplicate_scan": "True"
+          },
+          {
+            "shipment_id": "SHP-002",
+            "timestamp": "2026-03-06T11:15:00",
+            "status_code": "ATTEMPTED",
+            "status_description": "Came back next day still nobody home left 2nd notice",
+            "customer_id": "CUST-001",
+            "delivery_address": "140 Birch Lane, Westdale, 10003",
+            "package_type": "STANDARD",
+            "package_size": "MEDIUM",
+            "attempt_number": "2",
+            "is_duplicate_scan": "False"
+          }
+        ],
+        "shipment_id": "SHP-002",
+        "consolidated_event": {
+          "shipment_id": "SHP-002",
+          "timestamp": "2026-03-06T11:15:00",
+          "status_code": "ATTEMPTED",
+          "status_description": "Came back next day still nobody home left 2nd notice",
+          "customer_id": "CUST-001",
+          "delivery_address": "140 Birch Lane, Westdale, 10003",
+          "package_type": "STANDARD",
+          "package_size": "MEDIUM",
+          "attempt_number": 2,
+          "prior_attempt_notes": [
+            "Attempt 1: Nobody home rang bell twice no answer left notice on door"
+          ],
+          "total_rows": 3,
+          "duplicates_removed": 1
+        },
+        "customer_profile": {
+          "customer_id": "CUST-001",
+          "tier": "VIP",
+          "preferred_channel": "EMAIL",
+          "exceptions_last_90d": 5,
+          "active_credit": 15.0
+        },
+        "customer_profile_full": {
+          "customer_id": "CUST-001",
+          "name": "John Smith",
+          "tier": "VIP",
+          "preferred_channel": "EMAIL",
+          "exceptions_last_90d": 5,
+          "active_credit": 15.0
+        },
+        "locker_availability": [
+          {
+            "locker_id": "LOC-003",
+            "address": "88 Elm Boulevard, Westdale",
+            "zip_code": "10003",
+            "capacity_status": "FULL",
+            "operating_hours": "24 hours",
+            "max_package_size": "LARGE",
+            "eligible": false,
+            "reason": "Locker is FULL"
+          }
+        ],
+        "playbook_context": [
+          {
+            "content": "1. Failed Delivery Attempts \nThis is the most common exception you’ll deal with. The driver went to the address, but \ncouldn’t hand off the package. Maybe nobody was home, maybe the buzzer didn’t work, maybe \nthe building was locked, and there was no access code on file. Whatever the reason, the \npackage is coming back to the depot. \nWhat to Do by Attempt Number \nFirst Attempt: This is routine. Schedule a redelivery for the next business day. No customer \ncontact is required for the Standard tier, but send a notification letting them know we tried and \nwhen we’ll be back. For Premium and VIP customers, always send a notification regardless. \nSecond Attempt: Now we need to be more proactive. Send the customer a notification with \noptions: they can confirm they’ll be home for a third attempt, or they can choose to have the \npackage rerouted to a nearby locker (see Section 6 for locker reroute procedures). For VIP",
+            "page": 2
+          },
+          {
+            "content": "been in transit for several days, an extra move to a locker increases handling risk. Use your \njudgment.",
+            "page": 8
+          },
+          {
+            "content": "7. Escalation Matrix \nNot every exception needs a supervisor. But some absolutely do. Here’s how to know when to \nescalate and who to escalate to. \nAutomatic Escalation Triggers \nEscalate to your shift supervisor immediately if any of the following apply: \n•​\nThird failed delivery attempt on any shipment, regardless of customer tier \n•​\nAny exception involving a VIP customer who has had 3 or more exceptions in the last \n90 days \n•​\nAny damaged perishable package - these need a fast decision on replacement \n•​\nAddress issues that suggest possible fraud (vacant lot, demolished building) \n•​\nAny situation where the driver reports a safety concern \nDiscretionary Escalation \nUse your judgment to escalate in these situations, even if they don’t hit an automatic trigger: \n•​\nA Premium customer with a perishable package that’s been delayed more than 2 hours \n- technically under the 4-hour threshold, but the customer may have time-sensitive \nplans \n•​",
+            "page": 9
+          },
+          {
+            "content": "gets reviewed later, we need to understand why you made the call you did. \n•​\nTime matters. The faster we resolve an exception, the less likely it is to turn into a \ncomplaint. Aim to have a resolution path chosen within 30 minutes of the exception \nbeing flagged. \n•​\nWhen in doubt, err on the side of the customer. A small gesture now (a proactive call, a \nservice credit) prevents a much bigger problem later.",
+            "page": 1
+          },
+          {
+            "content": "5. Weather Delays \nBad weather is outside our control, but how we communicate about it is not. When weather \nevents impact delivery routes, the key priorities are keeping customers informed and protecting \nperishable shipments. \nStandard Packages \nFor non-perishable, non-fragile packages, a weather delay is the most straightforward \nexception to handle. Send the customer a notification explaining that severe weather is causing \ndelays in their area and providing an updated estimated delivery window. Be honest about the \ntimeline - don’t promise next-day if the roads might still be bad. SLA timers are paused during \ndeclared weather events, so there’s no penalty for the delay itself, only for failing to \ncommunicate. \nPerishable Packages - CRITICAL \nThis is where weather delays get serious. Perishable items have a hard time limit, and weather \ndoesn’t care about our delivery windows. Here’s the rule:",
+            "page": 6
+          }
+        ],
+        "escalation_signals": {
+          "has_triggers": true,
+          "trigger_count": 1,
+          "triggers": [
+            "AUTOMATIC: VIP customer with 5 exceptions in 90d (>=3)"
+          ]
+        },
+        "noise_override": false,
+        "guardrail_triggered": false,
+        "resolution_output": {
+          "is_exception": "YES",
+          "resolution": "RESCHEDULE",
+          "rationale": "1. The delivery event status is 'ATTEMPTED', indicating a failed delivery attempt, which classifies it as an exception (Rule: Exceptions include ATTEMPTED status).  \n2. This is the second delivery attempt (attempt_number: 2). According to the playbook, for the second attempt, we need to be proactive and notify the customer with options (Rule: Second Attempt requires customer notification with options).  \n3. The locker availability check shows that the only nearby locker is FULL, making it ineligible for rerouting (Rule: 1st or 2nd ATTEMPTED delivery with NO eligible lockers must use RESCHEDULE).  \n4. Therefore, the appropriate resolution action is to RESCHEDULE the delivery, as we cannot reroute to a locker and must contact the customer to confirm their availability for a third attempt."
+        },
+        "critic_resolution_output": {
+          "decision": "ESCALATE",
+          "rationale": "The resolution agent correctly identified the situation as an exception due to the 'ATTEMPTED' status and the second delivery attempt. However, the escalation signals indicate an automatic trigger due to the customer being a VIP with 5 exceptions in the last 90 days. According to the playbook, any exception involving a VIP customer with 3 or more exceptions in the last 90 days requires escalation to a supervisor. Therefore, despite the correct resolution action of RESCHEDULE, the presence of an automatic escalation trigger necessitates escalation to a supervisor for further review."
+        },
+        "resolution_revision_count": 0,
+        "critic_feedback": "",
+        "communication_output": {
+          "tone_label": "FORMAL",
+          "communication_message": "Dear Mr. Smith,\n\nWe regret to inform you that our delivery attempt was unsuccessful, as no one was home to receive your package. We have left a second notice and would like to reschedule the delivery at your convenience. Please let us know your preferred time for the next attempt, and we will ensure that your package is delivered promptly. We appreciate your understanding and value your continued support, especially with your active credit of $15.00.\n\nBest regards,\nYour Delivery Team"
+        },
+        "critic_communication_output": {
+          "decision": "ESCALATE",
+          "rationale": "The message is mostly appropriate in tone and content for a VIP customer, maintaining a formal tone. However, it includes a mention of the customer's active credit of $15.00, which could be considered sensitive information and is not necessary for the resolution of the delivery issue. This could potentially be seen as a PII concern. Additionally, the mention of the credit does not directly relate to the resolution action of rescheduling the delivery, making it somewhat irrelevant to the context of the message. Therefore, it requires supervisor review to ensure compliance with privacy standards."
+        },
+        "next_agent": "END",
+        "max_loops": 2,
+        "escalated": true,
+        "tool_calls_log": [
+          "PREPROCESSOR: Deduplicated rows",
+          "TOOL: lookup_customer_profile(CUST-001, pii=False)",
+          "TOOL: lookup_customer_profile(CUST-001, pii=True)",
+          "TOOL: check_locker_availability",
+          "TOOL: search_playbook(query)",
+          "TOOL: check_escalation_rules",
+          "AGENT: resolution_agent invoked",
+          "AGENT: critic_resolution invoked",
+          "AGENT: communication_agent invoked",
+          "AGENT: critic_communication invoked"
+        ],
+        "trajectory_log": [
+          "preprocessor: 3 raw rows -> 2 after dedup",
+          "resolution_agent: is_exception=YES, resolution=RESCHEDULE",
+          "critic_resolution: decision=ESCALATE",
+          "orchestrator: Forced escalation from rule engine - ['AUTOMATIC: VIP customer with 5 exceptions in 90d (>=3)']",
+          "communication_agent: tone=FORMAL",
+          "orchestrator: Forced escalation from rule engine - ['AUTOMATIC: VIP customer with 5 exceptions in 90d (>=3)']",
+          "critic_communication: decision=ESCALATE",
+          "orchestrator: Forced escalation from rule engine - ['AUTOMATIC: VIP customer with 5 exceptions in 90d (>=3)']",
+          "finalize: actions={\"shipment_id\": \"SHP-002\", \"is_exception\": \"YES\", \"resolution\": \"RESCHEDULE\", \"escalated\": true, \"tone\": \"FORMAL\", \"message\": \"Dear Mr. Smith,\\n\\nWe regret to inform you that our delivery attempt was unsuccessful, as no one was home to receive your package. We have left a second notice and would like to reschedule the delivery at your convenience. Please let us know your preferred time for the next attempt, and we will ensure that your package is delivered promptly. We appreciate your understanding and value your continued support, especially with your active credit of $15.00.\\n\\nBest regards,\\nYour Delivery Team\", \"revision_count\": 0, \"guardrail_blocked\": false}; latency=14.515s"
+        ],
+        "start_time": 1775509346.095168,
+        "latency_sec": 14.515052795410156,
+        "final_actions": [
+          {
+            "shipment_id": "SHP-002",
+            "is_exception": "YES",
+            "resolution": "RESCHEDULE",
+            "escalated": true,
+            "tone": "FORMAL",
+            "message": "Dear Mr. Smith,\n\nWe regret to inform you that our delivery attempt was unsuccessful, as no one was home to receive your package. We have left a second notice and would like to reschedule the delivery at your convenience. Please let us know your preferred time for the next attempt, and we will ensure that your package is delivered promptly. We appreciate your understanding and value your continued support, especially with your active credit of $15.00.\n\nBest regards,\nYour Delivery Team",
+            "revision_count": 0,
+            "guardrail_blocked": false
+          }
+        ]
+      },
+      "report": {
+        "shipment_id": "SHP-002",
+        "task_completion": {
+          "exception_correct": true,
+          "resolution_correct": true,
+          "tone_correct": true,
+          "task_complete": true
+        },
+        "escalation_correct": true,
+        "tool_call_correct": true,
+        "coherence": {
+          "score": 5,
+          "justification": "All decisions are logically consistent with clear rationale, including exception classification, resolution appropriateness, and justified escalation due to VIP status and privacy concerns."
+        },
+        "token_efficiency": {
+          "prompt_tokens": 0,
+          "completion_tokens": 0,
+          "total_tokens": 0,
+          "estimated_cost_usd": 0.0,
+          "tokens_per_resolution": null
+        },
+        "trajectory_drift": {
+          "trajectory_len": 9,
+          "tool_calls_len": 10,
+          "revision_count": 0,
+          "drift_flag": false
+        },
+        "semantic_similarity": {
+          "similarity": 0.0,
+          "golden_present": false
+        },
+        "latency_sec": 14.515052795410156,
+        "citations": [
+          "Page 3",
+          "Page 9",
+          "Page 10",
+          "Page 2",
+          "Page 7"
+        ]
+      },
+      "error": null,
+      "duration_sec": 15.6487,
+      "timestamp": "2026-04-06T21:02:26+00:00"
+    },
+    {
+      "shipment_id": "SHP-003",
+      "final_state": {
+        "raw_rows": [
+          {
+            "shipment_id": "SHP-003",
+            "timestamp": "2026-03-05T09:45:00",
+            "status_code": "ADDRESS_ISSUE",
+            "status_description": "cant find building 999 on this street asked around nobody knows it",
+            "customer_id": "CUST-005",
+            "delivery_address": "999 Oak Avenue, Riverside, 10002",
+            "package_type": "STANDARD",
+            "package_size": "SMALL",
+            "attempt_number": "1",
+            "is_duplicate_scan": "False"
+          }
+        ],
+        "shipment_id": "SHP-003",
+        "consolidated_event": {
+          "shipment_id": "SHP-003",
+          "timestamp": "2026-03-05T09:45:00",
+          "status_code": "ADDRESS_ISSUE",
+          "status_description": "cant find building 999 on this street asked around nobody knows it",
+          "customer_id": "CUST-005",
+          "delivery_address": "999 Oak Avenue, Riverside, 10002",
+          "package_type": "STANDARD",
+          "package_size": "SMALL",
+          "attempt_number": 1,
+          "prior_attempt_notes": [],
+          "total_rows": 1,
+          "duplicates_removed": 0
+        },
+        "customer_profile": {
+          "customer_id": "CUST-005",
+          "tier": "STANDARD",
+          "preferred_channel": "SMS",
+          "exceptions_last_90d": 0,
+          "active_credit": 0.0
+        },
+        "customer_profile_full": {
+          "customer_id": "CUST-005",
+          "name": "David Wilson",
+          "tier": "STANDARD",
+          "preferred_channel": "SMS",
+          "exceptions_last_90d": 0,
+          "active_credit": 0.0
+        },
+        "locker_availability": [
+          {
+            "locker_id": "LOC-002",
+            "address": "42 Oak Avenue, Riverside",
+            "zip_code": "10002",
+            "capacity_status": "LIMITED",
+            "operating_hours": "7AM-9PM",
+            "max_package_size": "MEDIUM",
+            "eligible": true,
+            "reason": "Compatible"
+          }
+        ],
+        "playbook_context": [
+          {
+            "content": "2. Address Mismatches \nAddress issues come in a few flavors. The building number doesn’t exist, the street name is \nwrong, the apartment number is missing, or the address is valid but clearly not a residential \ndelivery point (like a vacant lot or a construction site). Each needs a slightly different approach. \nBuilding or Street Not Found \nIf the driver can’t locate the address at all, hold the shipment at the depot and contact the \ncustomer to verify. Send a notification explaining that we were unable to locate the delivery \naddress and asking them to confirm or update it. Give them 48 hours to respond. If they don’t \nrespond within 48 hours, initiate a return-to-sender. For VIP customers, extend this to 72 hours \nand have the supervisor attempt a direct phone call before returning. \nMissing Apartment or Unit Number \nThis happens a lot with large apartment complexes. The driver can find the building, but",
+            "page": 3
+          },
+          {
+            "content": "customer, if the package is perishable, do not hold at the depot; see Section 5 for perishable \nhandling instead. \nDriver Notes \nPay attention to what the driver wrote. The notes are often messy and abbreviated, but they \ncontain important context. If the driver mentions a security gate, a broken buzzer, or a dog, that \ninformation should influence whether we reattempt or reroute. For example, if the driver says \nthe gate code doesn’t work, there’s no point sending them back tomorrow with the same code. \nIn that case, contact the customer to get an updated access code before scheduling the \nreattempt.",
+            "page": 2
+          },
+          {
+            "content": "gets reviewed later, we need to understand why you made the call you did. \n•​\nTime matters. The faster we resolve an exception, the less likely it is to turn into a \ncomplaint. Aim to have a resolution path chosen within 30 minutes of the exception \nbeing flagged. \n•​\nWhen in doubt, err on the side of the customer. A small gesture now (a proactive call, a \nservice credit) prevents a much bigger problem later.",
+            "page": 1
+          },
+          {
+            "content": "5. Weather Delays \nBad weather is outside our control, but how we communicate about it is not. When weather \nevents impact delivery routes, the key priorities are keeping customers informed and protecting \nperishable shipments. \nStandard Packages \nFor non-perishable, non-fragile packages, a weather delay is the most straightforward \nexception to handle. Send the customer a notification explaining that severe weather is causing \ndelays in their area and providing an updated estimated delivery window. Be honest about the \ntimeline - don’t promise next-day if the roads might still be bad. SLA timers are paused during \ndeclared weather events, so there’s no penalty for the delay itself, only for failing to \ncommunicate. \nPerishable Packages - CRITICAL \nThis is where weather delays get serious. Perishable items have a hard time limit, and weather \ndoesn’t care about our delivery windows. Here’s the rule:",
+            "page": 6
+          },
+          {
+            "content": "been in transit for several days, an extra move to a locker increases handling risk. Use your \njudgment.",
+            "page": 8
+          }
+        ],
+        "escalation_signals": {
+          "has_triggers": false,
+          "trigger_count": 0,
+          "triggers": []
+        },
+        "noise_override": false,
+        "guardrail_triggered": false,
+        "resolution_output": {
+          "is_exception": "YES",
+          "resolution": "RESCHEDULE",
+          "rationale": "1. The delivery event has a status code of 'ADDRESS_ISSUE', indicating that the driver could not locate the address (building 999 on Oak Avenue). This falls under the category of exceptions as per the classification rules. \n2. According to the playbook, for an ADDRESS_ISSUE, the appropriate action is to contact the customer to verify or update the address. Therefore, the resolution must be RESCHEDULE. \n3. The customer is a STANDARD tier, and there are no escalations or triggers present that would change the resolution path. \n4. Since this is the first attempt (attempt_number: 1), and there are no eligible lockers available (the locker is compatible but has limited capacity), we cannot use REROUTE_TO_LOCKER. \n5. The resolution is to contact the customer via their preferred channel (SMS) to confirm or update the address and then reschedule the delivery."
+        },
+        "critic_resolution_output": {
+          "decision": "ACCEPT",
+          "rationale": "The Resolution Agent correctly classified the event as an exception due to the 'ADDRESS_ISSUE' status code, which aligns with the playbook's definition of exceptions. The chosen resolution, RESCHEDULE, is appropriate as the playbook advises contacting the customer to verify or update the address when the building or street cannot be found. Since this is the first delivery attempt and the customer is a STANDARD tier with no escalation triggers, there is no need for escalation or alternative actions like REROUTE_TO_LOCKER, especially given the limited capacity of the available locker. The rationale provided is logically sound and consistent with the playbook rules."
+        },
+        "resolution_revision_count": 0,
+        "critic_feedback": "",
+        "communication_output": {
+          "tone_label": "CASUAL",
+          "communication_message": "Hey David! We ran into a little hiccup with your delivery because we couldn't find building 999 on Oak Avenue. Can you please confirm or update your address? Once we have that sorted, we’ll reschedule your delivery. Thanks for your help!"
+        },
+        "critic_communication_output": {
+          "decision": "ACCEPT",
+          "rationale": "The message is appropriate for the STANDARD customer tier, using a casual tone that matches the customer's status. It clearly explains the issue (address not found) and the resolution action (rescheduling upon address confirmation). The message is professional, clear, and suitable for SMS communication. There is no PII leakage or misleading information present."
+        },
+        "next_agent": "END",
+        "max_loops": 2,
+        "escalated": false,
+        "tool_calls_log": [
+          "PREPROCESSOR: Deduplicated rows",
+          "TOOL: lookup_customer_profile(CUST-005, pii=False)",
+          "TOOL: lookup_customer_profile(CUST-005, pii=True)",
+          "TOOL: check_locker_availability",
+          "TOOL: search_playbook(query)",
+          "TOOL: check_escalation_rules",
+          "AGENT: resolution_agent invoked",
+          "AGENT: critic_resolution invoked",
+          "AGENT: communication_agent invoked",
+          "AGENT: critic_communication invoked"
+        ],
+        "trajectory_log": [
+          "preprocessor: 1 raw rows -> 1 after dedup",
+          "resolution_agent: is_exception=YES, resolution=RESCHEDULE",
+          "critic_resolution: decision=ACCEPT",
+          "communication_agent: tone=CASUAL",
+          "critic_communication: decision=ACCEPT",
+          "finalize: actions={\"shipment_id\": \"SHP-003\", \"is_exception\": \"YES\", \"resolution\": \"RESCHEDULE\", \"escalated\": false, \"tone\": \"CASUAL\", \"message\": \"Hey David! We ran into a little hiccup with your delivery because we couldn't find building 999 on Oak Avenue. Can you please confirm or update your address? Once we have that sorted, we\\u2019ll reschedule your delivery. Thanks for your help!\", \"revision_count\": 0, \"guardrail_blocked\": false}; latency=11.012s"
+        ],
+        "start_time": 1775509361.79057,
+        "latency_sec": 11.012466669082642,
+        "final_actions": [
+          {
+            "shipment_id": "SHP-003",
+            "is_exception": "YES",
+            "resolution": "RESCHEDULE",
+            "escalated": false,
+            "tone": "CASUAL",
+            "message": "Hey David! We ran into a little hiccup with your delivery because we couldn't find building 999 on Oak Avenue. Can you please confirm or update your address? Once we have that sorted, we’ll reschedule your delivery. Thanks for your help!",
+            "revision_count": 0,
+            "guardrail_blocked": false
+          }
+        ]
+      },
+      "report": {
+        "shipment_id": "SHP-003",
+        "task_completion": {
+          "exception_correct": true,
+          "resolution_correct": true,
+          "tone_correct": true,
+          "task_complete": true
+        },
+        "escalation_correct": true,
+        "tool_call_correct": true,
+        "coherence": {
+          "score": 5,
+          "justification": "All decisions are logically consistent with a clear rationale chain, appropriate resolution, justified critic decisions, and consistent tone."
+        },
+        "token_efficiency": {
+          "prompt_tokens": 0,
+          "completion_tokens": 0,
+          "total_tokens": 0,
+          "estimated_cost_usd": 0.0,
+          "tokens_per_resolution": null
+        },
+        "trajectory_drift": {
+          "trajectory_len": 6,
+          "tool_calls_len": 10,
+          "revision_count": 0,
+          "drift_flag": false
+        },
+        "semantic_similarity": {
+          "similarity": 0.0,
+          "golden_present": false
+        },
+        "latency_sec": 11.012466669082642,
+        "citations": [
+          "Page 4",
+          "Page 3",
+          "Page 2",
+          "Page 7",
+          "Page 9"
+        ]
+      },
+      "error": null,
+      "duration_sec": 12.75,
+      "timestamp": "2026-04-06T21:02:41+00:00"
+    },
+    {
+      "shipment_id": "SHP-004",
+      "final_state": {
+        "raw_rows": [
+          {
+            "shipment_id": "SHP-004",
+            "timestamp": "2026-03-05T08:30:00",
+            "status_code": "DAMAGED",
+            "status_description": "Box crushed on one side contents might be damaged visible dent",
+            "customer_id": "CUST-008",
+            "delivery_address": "12 Pine Road, Northgate, 10004",
+            "package_type": "FRAGILE",
+            "package_size": "LARGE",
+            "attempt_number": "1",
+            "is_duplicate_scan": "False"
+          }
+        ],
+        "shipment_id": "SHP-004",
+        "consolidated_event": {
+          "shipment_id": "SHP-004",
+          "timestamp": "2026-03-05T08:30:00",
+          "status_code": "DAMAGED",
+          "status_description": "Box crushed on one side contents might be damaged visible dent",
+          "customer_id": "CUST-008",
+          "delivery_address": "12 Pine Road, Northgate, 10004",
+          "package_type": "FRAGILE",
+          "package_size": "LARGE",
+          "attempt_number": 1,
+          "prior_attempt_notes": [],
+          "total_rows": 1,
+          "duplicates_removed": 0
+        },
+        "customer_profile": {
+          "customer_id": "CUST-008",
+          "tier": "VIP",
+          "preferred_channel": "EMAIL",
+          "exceptions_last_90d": 4,
+          "active_credit": 20.0
+        },
+        "customer_profile_full": {
+          "customer_id": "CUST-008",
+          "name": "Emily Davis",
+          "tier": "VIP",
+          "preferred_channel": "EMAIL",
+          "exceptions_last_90d": 4,
+          "active_credit": 20.0
+        },
+        "locker_availability": [
+          {
+            "locker_id": "LOC-004",
+            "address": "215 Pine Road, Northgate",
+            "zip_code": "10004",
+            "capacity_status": "AVAILABLE",
+            "operating_hours": "8AM-8PM",
+            "max_package_size": "SMALL",
+            "eligible": false,
+            "reason": "Locker max SMALL < package LARGE"
+          }
+        ],
+        "playbook_context": [
+          {
+            "content": "3. Damaged Packages \nWhen a package is flagged as damaged, we need to make a judgment call: is it safe to deliver, \nor should we pull it from the delivery route? This depends on the type of damage and the type \nof package. \nAssessment \nRead the driver or handler notes carefully. There’s a big difference between a minor scuff on \nthe outer box and a crushed package with visible content damage. Use these guidelines: \n•​\nMinor cosmetic damage (small dent, torn label, light scuffing): Proceed with delivery. \nNote the damage in the shipment log and let the customer know when they receive it \nthat they should inspect the contents. \n•​\nModerate damage (crushed corner, box partially open, audible shifting of contents): Do \nnot deliver. Pull the package and notify the customer with two options: we can attempt \nto deliver as-is if they accept the risk, or we can initiate a replacement with the shipper. \n•​\nSevere damage (package leaking, contents visible, strong odor): Do not deliver under",
+            "page": 4
+          },
+          {
+            "content": "customer, if the package is perishable, do not hold at the depot; see Section 5 for perishable \nhandling instead. \nDriver Notes \nPay attention to what the driver wrote. The notes are often messy and abbreviated, but they \ncontain important context. If the driver mentions a security gate, a broken buzzer, or a dog, that \ninformation should influence whether we reattempt or reroute. For example, if the driver says \nthe gate code doesn’t work, there’s no point sending them back tomorrow with the same code. \nIn that case, contact the customer to get an updated access code before scheduling the \nreattempt.",
+            "page": 2
+          },
+          {
+            "content": "2. Address Mismatches \nAddress issues come in a few flavors. The building number doesn’t exist, the street name is \nwrong, the apartment number is missing, or the address is valid but clearly not a residential \ndelivery point (like a vacant lot or a construction site). Each needs a slightly different approach. \nBuilding or Street Not Found \nIf the driver can’t locate the address at all, hold the shipment at the depot and contact the \ncustomer to verify. Send a notification explaining that we were unable to locate the delivery \naddress and asking them to confirm or update it. Give them 48 hours to respond. If they don’t \nrespond within 48 hours, initiate a return-to-sender. For VIP customers, extend this to 72 hours \nand have the supervisor attempt a direct phone call before returning. \nMissing Apartment or Unit Number \nThis happens a lot with large apartment complexes. The driver can find the building, but",
+            "page": 3
+          },
+          {
+            "content": "been in transit for several days, an extra move to a locker increases handling risk. Use your \njudgment.",
+            "page": 8
+          },
+          {
+            "content": "gets reviewed later, we need to understand why you made the call you did. \n•​\nTime matters. The faster we resolve an exception, the less likely it is to turn into a \ncomplaint. Aim to have a resolution path chosen within 30 minutes of the exception \nbeing flagged. \n•​\nWhen in doubt, err on the side of the customer. A small gesture now (a proactive call, a \nservice credit) prevents a much bigger problem later.",
+            "page": 1
+          }
+        ],
+        "escalation_signals": {
+          "has_triggers": true,
+          "trigger_count": 1,
+          "triggers": [
+            "AUTOMATIC: VIP customer with 4 exceptions in 90d (>=3)"
+          ]
+        },
+        "noise_override": false,
+        "guardrail_triggered": false,
+        "resolution_output": {
+          "is_exception": "YES",
+          "resolution": "REPLACE",
+          "rationale": "1. The delivery event status is 'DAMAGED', which qualifies as an exception according to the classification rules. \n2. The damage is described as a 'Box crushed on one side contents might be damaged visible dent', indicating moderate damage. According to the playbook, moderate damage means we should not deliver the package and must notify the customer. \n3. Since the package is classified as 'FRAGILE', the playbook specifies that we should be more cautious with damaged fragile items. \n4. The guidelines state that for damaged packages, we can either attempt to deliver as-is if the customer accepts the risk or initiate a replacement with the shipper. Given the visible damage and the nature of the package, the safest course of action is to REPLACE the item. \n5. The customer is a VIP, which further emphasizes the need for a high standard of service and resolution. \n6. Therefore, the appropriate resolution action is to REPLACE the damaged package."
+        },
+        "critic_resolution_output": {
+          "decision": "ACCEPT",
+          "rationale": "The Resolution Agent correctly classified the event as an exception due to the 'DAMAGED' status code. The damage description ('Box crushed on one side contents might be damaged visible dent') aligns with the playbook's definition of moderate damage, which advises against delivery and suggests notifying the customer with options. Given the package is 'FRAGILE' and the customer is a VIP, the decision to initiate a replacement is consistent with the playbook's guidance to err on the side of caution and provide high service standards for VIP customers. The rationale provided is logically sound and references relevant playbook rules, making the resolution appropriate."
+        },
+        "resolution_revision_count": 0,
+        "critic_feedback": "",
+        "communication_output": {
+          "tone_label": "FORMAL",
+          "communication_message": "Dear Ms. Davis,\n\nWe regret to inform you that your recent delivery has encountered an issue. The package was found to be damaged, with a visible dent indicating that the contents may also be affected. In light of this, we are committed to ensuring your satisfaction and will be replacing the item promptly.\n\nThank you for your understanding, and we appreciate your continued trust in our service. Should you have any questions, please do not hesitate to reach out."
+        },
+        "critic_communication_output": {
+          "decision": "ACCEPT",
+          "rationale": "The message is appropriate for a VIP customer, using a formal tone as required. It clearly and professionally communicates the issue (damaged package) and the resolution action (replacement). There is no PII leakage or sensitive information included, and the message is suitable for the email channel. The information provided is accurate and not misleading."
+        },
+        "next_agent": "END",
+        "max_loops": 2,
+        "escalated": true,
+        "tool_calls_log": [
+          "PREPROCESSOR: Deduplicated rows",
+          "TOOL: lookup_customer_profile(CUST-008, pii=False)",
+          "TOOL: lookup_customer_profile(CUST-008, pii=True)",
+          "TOOL: check_locker_availability",
+          "TOOL: search_playbook(query)",
+          "TOOL: check_escalation_rules",
+          "AGENT: resolution_agent invoked",
+          "AGENT: critic_resolution invoked",
+          "AGENT: communication_agent invoked",
+          "AGENT: critic_communication invoked"
+        ],
+        "trajectory_log": [
+          "preprocessor: 1 raw rows -> 1 after dedup",
+          "resolution_agent: is_exception=YES, resolution=REPLACE",
+          "critic_resolution: decision=ACCEPT",
+          "orchestrator: Forced escalation from rule engine - ['AUTOMATIC: VIP customer with 4 exceptions in 90d (>=3)']",
+          "communication_agent: tone=FORMAL",
+          "orchestrator: Forced escalation from rule engine - ['AUTOMATIC: VIP customer with 4 exceptions in 90d (>=3)']",
+          "critic_communication: decision=ACCEPT",
+          "orchestrator: Forced escalation from rule engine - ['AUTOMATIC: VIP customer with 4 exceptions in 90d (>=3)']",
+          "finalize: actions={\"shipment_id\": \"SHP-004\", \"is_exception\": \"YES\", \"resolution\": \"REPLACE\", \"escalated\": true, \"tone\": \"FORMAL\", \"message\": \"Dear Ms. Davis,\\n\\nWe regret to inform you that your recent delivery has encountered an issue. The package was found to be damaged, with a visible dent indicating that the contents may also be affected. In light of this, we are committed to ensuring your satisfaction and will be replacing the item promptly.\\n\\nThank you for your understanding, and we appreciate your continued trust in our service. Should you have any questions, please do not hesitate to reach out.\", \"revision_count\": 0, \"guardrail_blocked\": false}; latency=12.297s"
+        ],
+        "start_time": 1775509374.5445848,
+        "latency_sec": 12.296730518341064,
+        "final_actions": [
+          {
+            "shipment_id": "SHP-004",
+            "is_exception": "YES",
+            "resolution": "REPLACE",
+            "escalated": true,
+            "tone": "FORMAL",
+            "message": "Dear Ms. Davis,\n\nWe regret to inform you that your recent delivery has encountered an issue. The package was found to be damaged, with a visible dent indicating that the contents may also be affected. In light of this, we are committed to ensuring your satisfaction and will be replacing the item promptly.\n\nThank you for your understanding, and we appreciate your continued trust in our service. Should you have any questions, please do not hesitate to reach out.",
+            "revision_count": 0,
+            "guardrail_blocked": false
+          }
+        ]
+      },
+      "report": {
+        "shipment_id": "SHP-004",
+        "task_completion": {
+          "exception_correct": true,
+          "resolution_correct": true,
+          "tone_correct": true,
+          "task_complete": true
+        },
+        "escalation_correct": true,
+        "tool_call_correct": true,
+        "coherence": {
+          "score": 5,
+          "justification": "All decisions are logically consistent with a clear rationale chain, appropriate resolution for a VIP customer, and formal communication tone."
+        },
+        "token_efficiency": {
+          "prompt_tokens": 0,
+          "completion_tokens": 0,
+          "total_tokens": 0,
+          "estimated_cost_usd": 0.0,
+          "tokens_per_resolution": null
+        },
+        "trajectory_drift": {
+          "trajectory_len": 9,
+          "tool_calls_len": 10,
+          "revision_count": 0,
+          "drift_flag": false
+        },
+        "semantic_similarity": {
+          "similarity": 0.0,
+          "golden_present": false
+        },
+        "latency_sec": 12.296730518341064,
+        "citations": [
+          "Page 5",
+          "Page 3",
+          "Page 4",
+          "Page 9",
+          "Page 2"
+        ]
+      },
+      "error": null,
+      "duration_sec": 13.8128,
+      "timestamp": "2026-04-06T21:02:54+00:00"
+    },
+    {
+      "shipment_id": "SHP-005",
+      "final_state": {
+        "raw_rows": [
+          {
+            "shipment_id": "SHP-005",
+            "timestamp": "2026-03-05T13:15:00",
+            "status_code": "ATTEMPTED",
+            "status_description": "3rd try customer still not available building has no buzzer system",
+            "customer_id": "CUST-011",
+            "delivery_address": "88 Elm Boulevard, Westdale, 10003",
+            "package_type": "STANDARD",
+            "package_size": "MEDIUM",
+            "attempt_number": "3",
+            "is_duplicate_scan": "False"
+          }
+        ],
+        "shipment_id": "SHP-005",
+        "consolidated_event": {
+          "shipment_id": "SHP-005",
+          "timestamp": "2026-03-05T13:15:00",
+          "status_code": "ATTEMPTED",
+          "status_description": "3rd try customer still not available building has no buzzer system",
+          "customer_id": "CUST-011",
+          "delivery_address": "88 Elm Boulevard, Westdale, 10003",
+          "package_type": "STANDARD",
+          "package_size": "MEDIUM",
+          "attempt_number": 3,
+          "prior_attempt_notes": [],
+          "total_rows": 1,
+          "duplicates_removed": 0
+        },
+        "customer_profile": {
+          "customer_id": "CUST-011",
+          "tier": "STANDARD",
+          "preferred_channel": "SMS",
+          "exceptions_last_90d": 6,
+          "active_credit": 0.0
+        },
+        "customer_profile_full": {
+          "customer_id": "CUST-011",
+          "name": "Thomas Martin",
+          "tier": "STANDARD",
+          "preferred_channel": "SMS",
+          "exceptions_last_90d": 6,
+          "active_credit": 0.0
+        },
+        "locker_availability": [
+          {
+            "locker_id": "LOC-003",
+            "address": "88 Elm Boulevard, Westdale",
+            "zip_code": "10003",
+            "capacity_status": "FULL",
+            "operating_hours": "24 hours",
+            "max_package_size": "LARGE",
+            "eligible": false,
+            "reason": "Locker is FULL"
+          }
+        ],
+        "playbook_context": [
+          {
+            "content": "1. Failed Delivery Attempts \nThis is the most common exception you’ll deal with. The driver went to the address, but \ncouldn’t hand off the package. Maybe nobody was home, maybe the buzzer didn’t work, maybe \nthe building was locked, and there was no access code on file. Whatever the reason, the \npackage is coming back to the depot. \nWhat to Do by Attempt Number \nFirst Attempt: This is routine. Schedule a redelivery for the next business day. No customer \ncontact is required for the Standard tier, but send a notification letting them know we tried and \nwhen we’ll be back. For Premium and VIP customers, always send a notification regardless. \nSecond Attempt: Now we need to be more proactive. Send the customer a notification with \noptions: they can confirm they’ll be home for a third attempt, or they can choose to have the \npackage rerouted to a nearby locker (see Section 6 for locker reroute procedures). For VIP",
+            "page": 2
+          },
+          {
+            "content": "2. Address Mismatches \nAddress issues come in a few flavors. The building number doesn’t exist, the street name is \nwrong, the apartment number is missing, or the address is valid but clearly not a residential \ndelivery point (like a vacant lot or a construction site). Each needs a slightly different approach. \nBuilding or Street Not Found \nIf the driver can’t locate the address at all, hold the shipment at the depot and contact the \ncustomer to verify. Send a notification explaining that we were unable to locate the delivery \naddress and asking them to confirm or update it. Give them 48 hours to respond. If they don’t \nrespond within 48 hours, initiate a return-to-sender. For VIP customers, extend this to 72 hours \nand have the supervisor attempt a direct phone call before returning. \nMissing Apartment or Unit Number \nThis happens a lot with large apartment complexes. The driver can find the building, but",
+            "page": 3
+          },
+          {
+            "content": "8. Customer Communication Guidelines \nEvery notification we send shapes how the customer feels about us. A well-written message \ncan turn a failed delivery into a minor inconvenience. A badly written one can turn it into a \ncomplaint. \nChannel Selection \nUse the customer’s tier to determine the communication channel: \n•​\nVIP customers: Email. These customers expect detailed, professional communication. \n•​\nPremium customers: Email. Same standard as VIP. \n•​\nStandard customers: SMS. Keep it brief and actionable. \nTone \nCheck the customer’s tone_preference field in their profile. FORMAL customers get structured, \npolite language with full sentences. CASUAL customers get a friendlier, more conversational \ntone. Regardless of preference, never be flippant about the problem. A casual tone doesn’t \nmean we don’t take the issue seriously. \nWhat to Include \nEvery exception notification should include: \n1.​ What happened - a plain-language explanation, not a status code",
+            "page": 10
+          },
+          {
+            "content": "gets reviewed later, we need to understand why you made the call you did. \n•​\nTime matters. The faster we resolve an exception, the less likely it is to turn into a \ncomplaint. Aim to have a resolution path chosen within 30 minutes of the exception \nbeing flagged. \n•​\nWhen in doubt, err on the side of the customer. A small gesture now (a proactive call, a \nservice credit) prevents a much bigger problem later.",
+            "page": 1
+          },
+          {
+            "content": "5. Weather Delays \nBad weather is outside our control, but how we communicate about it is not. When weather \nevents impact delivery routes, the key priorities are keeping customers informed and protecting \nperishable shipments. \nStandard Packages \nFor non-perishable, non-fragile packages, a weather delay is the most straightforward \nexception to handle. Send the customer a notification explaining that severe weather is causing \ndelays in their area and providing an updated estimated delivery window. Be honest about the \ntimeline - don’t promise next-day if the roads might still be bad. SLA timers are paused during \ndeclared weather events, so there’s no penalty for the delay itself, only for failing to \ncommunicate. \nPerishable Packages - CRITICAL \nThis is where weather delays get serious. Perishable items have a hard time limit, and weather \ndoesn’t care about our delivery windows. Here’s the rule:",
+            "page": 6
+          }
+        ],
+        "escalation_signals": {
+          "has_triggers": true,
+          "trigger_count": 2,
+          "triggers": [
+            "AUTOMATIC: 3rd failed delivery attempt",
+            "DISCRETIONARY: Standard customer with 6 exceptions in 90d (>5)"
+          ]
+        },
+        "noise_override": false,
+        "guardrail_triggered": false,
+        "resolution_output": {
+          "is_exception": "YES",
+          "resolution": "REROUTE_TO_LOCKER",
+          "rationale": "1. The delivery event status is 'ATTEMPTED', indicating a failed delivery attempt, which classifies it as an exception (Rule 1). 2. This is the 3rd attempt to deliver the package, which according to the playbook, mandates the use of 'REROUTE_TO_LOCKER' regardless of locker availability (Rule 2). 3. Although the available locker is marked as 'FULL', the playbook specifies that for 3rd+ attempts, we must still proceed with 'REROUTE_TO_LOCKER' and the escalation system will handle any issues with locker alternatives (Rule 2). 4. The customer is a STANDARD tier, which does not change the resolution action since the playbook rules apply uniformly regardless of customer tier for this specific case."
+        },
+        "critic_resolution_output": {
+          "decision": "ESCALATE",
+          "rationale": "The resolution to 'REROUTE_TO_LOCKER' is consistent with the playbook rules for a 3rd failed delivery attempt, even when no eligible lockers are available. However, the presence of a DISCRETIONARY escalation trigger due to the customer's high exception history (6 exceptions in 90 days) requires supervisor awareness. According to the guidelines, discretionary triggers indicate systemic patterns that necessitate escalation. Therefore, while the resolution action itself is correct, the case should be escalated for supervisor review due to the discretionary trigger."
+        },
+        "resolution_revision_count": 0,
+        "critic_feedback": "",
+        "communication_output": {
+          "tone_label": "CASUAL",
+          "communication_message": "Hey Thomas! We tried delivering your package three times, but it looks like you weren't available, and the building doesn't have a buzzer system. To make it easier for you, we’re rerouting your package to a nearby locker. You can pick it up at the Full Locker located at 123 Main St. Let us know if you need anything else!"
+        },
+        "critic_communication_output": {
+          "decision": "ACCEPT",
+          "rationale": "The message is appropriately casual for a STANDARD tier customer, which matches the tone label. It clearly explains the situation (attempted delivery and rerouting to a locker) and provides the necessary information about the locker location. The message is professional, clear, and suitable for SMS communication. There is no PII leakage or misleading information present."
+        },
+        "next_agent": "END",
+        "max_loops": 2,
+        "escalated": true,
+        "tool_calls_log": [
+          "PREPROCESSOR: Deduplicated rows",
+          "TOOL: lookup_customer_profile(CUST-011, pii=False)",
+          "TOOL: lookup_customer_profile(CUST-011, pii=True)",
+          "TOOL: check_locker_availability",
+          "TOOL: search_playbook(query)",
+          "TOOL: check_escalation_rules",
+          "AGENT: resolution_agent invoked",
+          "AGENT: critic_resolution invoked",
+          "AGENT: communication_agent invoked",
+          "AGENT: critic_communication invoked"
+        ],
+        "trajectory_log": [
+          "preprocessor: 1 raw rows -> 1 after dedup",
+          "resolution_agent: is_exception=YES, resolution=REROUTE_TO_LOCKER",
+          "critic_resolution: decision=ESCALATE",
+          "orchestrator: Forced escalation from rule engine - ['AUTOMATIC: 3rd failed delivery attempt']",
+          "orchestrator: Escalation from discretionary triggers - ['DISCRETIONARY: Standard customer with 6 exceptions in 90d (>5)']",
+          "communication_agent: tone=CASUAL",
+          "orchestrator: Forced escalation from rule engine - ['AUTOMATIC: 3rd failed delivery attempt']",
+          "orchestrator: Escalation from discretionary triggers - ['DISCRETIONARY: Standard customer with 6 exceptions in 90d (>5)']",
+          "critic_communication: decision=ACCEPT",
+          "orchestrator: Forced escalation from rule engine - ['AUTOMATIC: 3rd failed delivery attempt']",
+          "orchestrator: Escalation from discretionary triggers - ['DISCRETIONARY: Standard customer with 6 exceptions in 90d (>5)']",
+          "finalize: actions={\"shipment_id\": \"SHP-005\", \"is_exception\": \"YES\", \"resolution\": \"REROUTE_TO_LOCKER\", \"escalated\": true, \"tone\": \"CASUAL\", \"message\": \"Hey Thomas! We tried delivering your package three times, but it looks like you weren't available, and the building doesn't have a buzzer system. To make it easier for you, we\\u2019re rerouting your package to a nearby locker. You can pick it up at the Full Locker located at 123 Main St. Let us know if you need anything else!\", \"revision_count\": 0, \"guardrail_blocked\": false}; latency=12.920s"
+        ],
+        "start_time": 1775509388.3551195,
+        "latency_sec": 12.920372009277344,
+        "final_actions": [
+          {
+            "shipment_id": "SHP-005",
+            "is_exception": "YES",
+            "resolution": "REROUTE_TO_LOCKER",
+            "escalated": true,
+            "tone": "CASUAL",
+            "message": "Hey Thomas! We tried delivering your package three times, but it looks like you weren't available, and the building doesn't have a buzzer system. To make it easier for you, we’re rerouting your package to a nearby locker. You can pick it up at the Full Locker located at 123 Main St. Let us know if you need anything else!",
+            "revision_count": 0,
+            "guardrail_blocked": false
+          }
+        ]
+      },
+      "report": {
+        "shipment_id": "SHP-005",
+        "task_completion": {
+          "exception_correct": true,
+          "resolution_correct": true,
+          "tone_correct": true,
+          "task_complete": true
+        },
+        "escalation_correct": true,
+        "tool_call_correct": true,
+        "coherence": {
+          "score": 5,
+          "justification": "All decisions are logically consistent with clear rationale, appropriate escalation, and suitable communication tone."
+        },
+        "token_efficiency": {
+          "prompt_tokens": 0,
+          "completion_tokens": 0,
+          "total_tokens": 0,
+          "estimated_cost_usd": 0.0,
+          "tokens_per_resolution": null
+        },
+        "trajectory_drift": {
+          "trajectory_len": 12,
+          "tool_calls_len": 10,
+          "revision_count": 0,
+          "drift_flag": false
+        },
+        "semantic_similarity": {
+          "similarity": 0.0,
+          "golden_present": false
+        },
+        "latency_sec": 12.920372009277344,
+        "citations": [
+          "Page 3",
+          "Page 4",
+          "Page 11",
+          "Page 2",
+          "Page 7"
+        ]
+      },
+      "error": null,
+      "duration_sec": 14.0771,
+      "timestamp": "2026-04-06T21:03:08+00:00"
+    },
+    {
+      "shipment_id": "SHP-006",
+      "final_state": {
+        "raw_rows": [
+          {
+            "shipment_id": "SHP-006",
+            "timestamp": "2026-03-05T10:50:00",
+            "status_code": "REFUSED",
+            "status_description": "Customer opened door said they didnt order this refused to accept",
+            "customer_id": "CUST-007",
+            "delivery_address": "301 Main Street, Greenfield, 10001",
+            "package_type": "STANDARD",
+            "package_size": "SMALL",
+            "attempt_number": "1",
+            "is_duplicate_scan": "False"
+          }
+        ],
+        "shipment_id": "SHP-006",
+        "consolidated_event": {
+          "shipment_id": "SHP-006",
+          "timestamp": "2026-03-05T10:50:00",
+          "status_code": "REFUSED",
+          "status_description": "Customer opened door said they didnt order this refused to accept",
+          "customer_id": "CUST-007",
+          "delivery_address": "301 Main Street, Greenfield, 10001",
+          "package_type": "STANDARD",
+          "package_size": "SMALL",
+          "attempt_number": 1,
+          "prior_attempt_notes": [],
+          "total_rows": 1,
+          "duplicates_removed": 0
+        },
+        "customer_profile": {
+          "customer_id": "CUST-007",
+          "tier": "STANDARD",
+          "preferred_channel": "SMS",
+          "exceptions_last_90d": 1,
+          "active_credit": 0.0
+        },
+        "customer_profile_full": {
+          "customer_id": "CUST-007",
+          "name": "Michael Lee",
+          "tier": "STANDARD",
+          "preferred_channel": "SMS",
+          "exceptions_last_90d": 1,
+          "active_credit": 0.0
+        },
+        "locker_availability": [
+          {
+            "locker_id": "LOC-001",
+            "address": "150 Main Street, Greenfield",
+            "zip_code": "10001",
+            "capacity_status": "AVAILABLE",
+            "operating_hours": "6AM-10PM",
+            "max_package_size": "LARGE",
+            "eligible": true,
+            "reason": "Compatible"
+          }
+        ],
+        "playbook_context": [
+          {
+            "content": "4. Refused Deliveries \nSometimes the customer is home but doesn’t want the package. This could be because they \ndidn’t order it, they’ve already cancelled the order, or they’re unhappy with the shipping time \nand no longer want it. \nStandard Refusal Process \n1.​ Accept the refusal - never argue with the customer or pressure them to accept. \n2.​ Log the refusal reason in the shipment notes based on what the driver reported. \n3.​ Initiate the return-to-sender process. The package goes back to the depot and ships \nback to the origin within 2 business days. \n4.​ Send the customer a confirmation that we’ve processed their refusal and that the item \nis being returned. \nDidn’t Order It \nIf the customer says they didn’t order the item, this could be a misdelivery (wrong address) or \nan unsolicited shipment. Check the shipment record to verify the address matches. If there’s a \nmismatch, this is actually an address issue - treat it under Section 2. If the address matches but",
+            "page": 5
+          },
+          {
+            "content": "gets reviewed later, we need to understand why you made the call you did. \n•​\nTime matters. The faster we resolve an exception, the less likely it is to turn into a \ncomplaint. Aim to have a resolution path chosen within 30 minutes of the exception \nbeing flagged. \n•​\nWhen in doubt, err on the side of the customer. A small gesture now (a proactive call, a \nservice credit) prevents a much bigger problem later.",
+            "page": 1
+          },
+          {
+            "content": "3. Damaged Packages \nWhen a package is flagged as damaged, we need to make a judgment call: is it safe to deliver, \nor should we pull it from the delivery route? This depends on the type of damage and the type \nof package. \nAssessment \nRead the driver or handler notes carefully. There’s a big difference between a minor scuff on \nthe outer box and a crushed package with visible content damage. Use these guidelines: \n•​\nMinor cosmetic damage (small dent, torn label, light scuffing): Proceed with delivery. \nNote the damage in the shipment log and let the customer know when they receive it \nthat they should inspect the contents. \n•​\nModerate damage (crushed corner, box partially open, audible shifting of contents): Do \nnot deliver. Pull the package and notify the customer with two options: we can attempt \nto deliver as-is if they accept the risk, or we can initiate a replacement with the shipper. \n•​\nSevere damage (package leaking, contents visible, strong odor): Do not deliver under",
+            "page": 4
+          },
+          {
+            "content": "been in transit for several days, an extra move to a locker increases handling risk. Use your \njudgment.",
+            "page": 8
+          },
+          {
+            "content": "7. Escalation Matrix \nNot every exception needs a supervisor. But some absolutely do. Here’s how to know when to \nescalate and who to escalate to. \nAutomatic Escalation Triggers \nEscalate to your shift supervisor immediately if any of the following apply: \n•​\nThird failed delivery attempt on any shipment, regardless of customer tier \n•​\nAny exception involving a VIP customer who has had 3 or more exceptions in the last \n90 days \n•​\nAny damaged perishable package - these need a fast decision on replacement \n•​\nAddress issues that suggest possible fraud (vacant lot, demolished building) \n•​\nAny situation where the driver reports a safety concern \nDiscretionary Escalation \nUse your judgment to escalate in these situations, even if they don’t hit an automatic trigger: \n•​\nA Premium customer with a perishable package that’s been delayed more than 2 hours \n- technically under the 4-hour threshold, but the customer may have time-sensitive \nplans \n•​",
+            "page": 9
+          }
+        ],
+        "escalation_signals": {
+          "has_triggers": false,
+          "trigger_count": 0,
+          "triggers": []
+        },
+        "noise_override": false,
+        "guardrail_triggered": false,
+        "resolution_output": {
+          "is_exception": "YES",
+          "resolution": "RETURN_TO_SENDER",
+          "rationale": "1. The delivery event status code is 'REFUSED', indicating that the customer explicitly rejected the delivery. This falls under the exception category as per the classification rules. 2. According to the relevant playbook section on refused deliveries, we must accept the refusal without arguing and initiate the return-to-sender process. 3. The refusal reason provided by the customer is that they did not order the package, which aligns with the standard refusal process. 4. Since the customer has refused the package, we will not reschedule or reroute to a locker, as those actions are not applicable for a REFUSED status. 5. Therefore, the appropriate resolution is to initiate the return-to-sender process, confirming to the customer that their refusal has been processed."
+        },
+        "critic_resolution_output": {
+          "decision": "ACCEPT",
+          "rationale": "The Resolution Agent correctly classified the event as an exception due to the 'REFUSED' status code, which indicates an explicit customer refusal. According to the playbook rules on refused deliveries, the appropriate action is to initiate the return-to-sender process. The rationale provided aligns with the playbook's guidance to accept the refusal and process the return without attempting rescheduling or rerouting to a locker. The decision is consistent with the rules, and there are no escalation triggers present, making the resolution appropriate and well-reasoned."
+        },
+        "resolution_revision_count": 0,
+        "critic_feedback": "",
+        "communication_output": {
+          "tone_label": "CASUAL",
+          "communication_message": "Hey Michael! I wanted to let you know that your delivery was refused because you mentioned you didn’t order it. No worries, we’re processing it as a return to sender. If you have any questions, feel free to reach out!"
+        },
+        "critic_communication_output": {
+          "decision": "ACCEPT",
+          "rationale": "The message is appropriate for the STANDARD customer tier, using a casual tone as expected. It clearly explains the situation (package refused and being returned to sender) without including any sensitive information or internal details. The message is professional, clear, and suitable for SMS communication. There is no misleading information, and it accurately reflects the resolution action and exception type."
+        },
+        "next_agent": "END",
+        "max_loops": 2,
+        "escalated": false,
+        "tool_calls_log": [
+          "PREPROCESSOR: Deduplicated rows",
+          "TOOL: lookup_customer_profile(CUST-007, pii=False)",
+          "TOOL: lookup_customer_profile(CUST-007, pii=True)",
+          "TOOL: check_locker_availability",
+          "TOOL: search_playbook(query)",
+          "TOOL: check_escalation_rules",
+          "AGENT: resolution_agent invoked",
+          "AGENT: critic_resolution invoked",
+          "AGENT: communication_agent invoked",
+          "AGENT: critic_communication invoked"
+        ],
+        "trajectory_log": [
+          "preprocessor: 1 raw rows -> 1 after dedup",
+          "resolution_agent: is_exception=YES, resolution=RETURN_TO_SENDER",
+          "critic_resolution: decision=ACCEPT",
+          "communication_agent: tone=CASUAL",
+          "critic_communication: decision=ACCEPT",
+          "finalize: actions={\"shipment_id\": \"SHP-006\", \"is_exception\": \"YES\", \"resolution\": \"RETURN_TO_SENDER\", \"escalated\": false, \"tone\": \"CASUAL\", \"message\": \"Hey Michael! I wanted to let you know that your delivery was refused because you mentioned you didn\\u2019t order it. No worries, we\\u2019re processing it as a return to sender. If you have any questions, feel free to reach out!\", \"revision_count\": 0, \"guardrail_blocked\": false}; latency=12.234s"
+        ],
+        "start_time": 1775509402.437058,
+        "latency_sec": 12.233963012695312,
+        "final_actions": [
+          {
+            "shipment_id": "SHP-006",
+            "is_exception": "YES",
+            "resolution": "RETURN_TO_SENDER",
+            "escalated": false,
+            "tone": "CASUAL",
+            "message": "Hey Michael! I wanted to let you know that your delivery was refused because you mentioned you didn’t order it. No worries, we’re processing it as a return to sender. If you have any questions, feel free to reach out!",
+            "revision_count": 0,
+            "guardrail_blocked": false
+          }
+        ]
+      },
+      "report": {
+        "shipment_id": "SHP-006",
+        "task_completion": {
+          "exception_correct": true,
+          "resolution_correct": true,
+          "tone_correct": true,
+          "task_complete": true
+        },
+        "escalation_correct": true,
+        "tool_call_correct": true,
+        "coherence": {
+          "score": 5,
+          "justification": "All decisions are logically consistent with a clear rationale chain, appropriate resolution, justified critic decisions, and consistent tone."
+        },
+        "token_efficiency": {
+          "prompt_tokens": 0,
+          "completion_tokens": 0,
+          "total_tokens": 0,
+          "estimated_cost_usd": 0.0,
+          "tokens_per_resolution": null
+        },
+        "trajectory_drift": {
+          "trajectory_len": 6,
+          "tool_calls_len": 10,
+          "revision_count": 0,
+          "drift_flag": false
+        },
+        "semantic_similarity": {
+          "similarity": 0.0,
+          "golden_present": false
+        },
+        "latency_sec": 12.233963012695312,
+        "citations": [
+          "Page 6",
+          "Page 2",
+          "Page 5",
+          "Page 9",
+          "Page 10"
+        ]
+      },
+      "error": null,
+      "duration_sec": 13.348,
+      "timestamp": "2026-04-06T21:03:22+00:00"
+    },
+    {
+      "shipment_id": "SHP-007",
+      "final_state": {
+        "raw_rows": [
+          {
+            "shipment_id": "SHP-007",
+            "timestamp": "2026-03-05T14:00:00",
+            "status_code": "WEATHER_DELAY",
+            "status_description": "Heavy snow on route roads blocked estimated 5hr delay",
+            "customer_id": "CUST-004",
+            "delivery_address": "78 Birch Court, Southfield, 10006",
+            "package_type": "PERISHABLE",
+            "package_size": "MEDIUM",
+            "attempt_number": "1",
+            "is_duplicate_scan": "False"
+          },
+          {
+            "shipment_id": "SHP-007",
+            "timestamp": "2026-03-05T14:03:00",
+            "status_code": "WEATHER_DELAY",
+            "status_description": "Heavy snow on route roads blocked estimated 5hr delay",
+            "customer_id": "CUST-004",
+            "delivery_address": "78 Birch Court, Southfield, 10006",
+            "package_type": "PERISHABLE",
+            "package_size": "MEDIUM",
+            "attempt_number": "1",
+            "is_duplicate_scan": "True"
+          }
+        ],
+        "shipment_id": "SHP-007",
+        "consolidated_event": {
+          "shipment_id": "SHP-007",
+          "timestamp": "2026-03-05T14:00:00",
+          "status_code": "WEATHER_DELAY",
+          "status_description": "Heavy snow on route roads blocked estimated 5hr delay",
+          "customer_id": "CUST-004",
+          "delivery_address": "78 Birch Court, Southfield, 10006",
+          "package_type": "PERISHABLE",
+          "package_size": "MEDIUM",
+          "attempt_number": 1,
+          "prior_attempt_notes": [],
+          "total_rows": 2,
+          "duplicates_removed": 1
+        },
+        "customer_profile": {
+          "customer_id": "CUST-004",
+          "tier": "VIP",
+          "preferred_channel": "EMAIL",
+          "exceptions_last_90d": 1,
+          "active_credit": 10.0
+        },
+        "customer_profile_full": {
+          "customer_id": "CUST-004",
+          "name": "Maria Garcia",
+          "tier": "VIP",
+          "preferred_channel": "EMAIL",
+          "exceptions_last_90d": 1,
+          "active_credit": 10.0
+        },
+        "locker_availability": [
+          {
+            "locker_id": "LOC-006",
+            "address": "170 Birch Court, Southfield",
+            "zip_code": "10006",
+            "capacity_status": "AVAILABLE",
+            "operating_hours": "24 hours",
+            "max_package_size": "LARGE",
+            "eligible": true,
+            "reason": "Compatible"
+          }
+        ],
+        "playbook_context": [
+          {
+            "content": "5. Weather Delays \nBad weather is outside our control, but how we communicate about it is not. When weather \nevents impact delivery routes, the key priorities are keeping customers informed and protecting \nperishable shipments. \nStandard Packages \nFor non-perishable, non-fragile packages, a weather delay is the most straightforward \nexception to handle. Send the customer a notification explaining that severe weather is causing \ndelays in their area and providing an updated estimated delivery window. Be honest about the \ntimeline - don’t promise next-day if the roads might still be bad. SLA timers are paused during \ndeclared weather events, so there’s no penalty for the delay itself, only for failing to \ncommunicate. \nPerishable Packages - CRITICAL \nThis is where weather delays get serious. Perishable items have a hard time limit, and weather \ndoesn’t care about our delivery windows. Here’s the rule:",
+            "page": 6
+          },
+          {
+            "content": "Fragile Packages \nWeather delays don’t change the handling requirements for fragile packages, but be aware \nthat severe weather can increase the risk of damage during extended transit. If a fragile \npackage has been sitting in a vehicle through a storm, inspect it at the depot before \nreattempting delivery.",
+            "page": 6
+          },
+          {
+            "content": "4. Refused Deliveries \nSometimes the customer is home but doesn’t want the package. This could be because they \ndidn’t order it, they’ve already cancelled the order, or they’re unhappy with the shipping time \nand no longer want it. \nStandard Refusal Process \n1.​ Accept the refusal - never argue with the customer or pressure them to accept. \n2.​ Log the refusal reason in the shipment notes based on what the driver reported. \n3.​ Initiate the return-to-sender process. The package goes back to the depot and ships \nback to the origin within 2 business days. \n4.​ Send the customer a confirmation that we’ve processed their refusal and that the item \nis being returned. \nDidn’t Order It \nIf the customer says they didn’t order the item, this could be a misdelivery (wrong address) or \nan unsolicited shipment. Check the shipment record to verify the address matches. If there’s a \nmismatch, this is actually an address issue - treat it under Section 2. If the address matches but",
+            "page": 5
+          },
+          {
+            "content": "gets reviewed later, we need to understand why you made the call you did. \n•​\nTime matters. The faster we resolve an exception, the less likely it is to turn into a \ncomplaint. Aim to have a resolution path chosen within 30 minutes of the exception \nbeing flagged. \n•​\nWhen in doubt, err on the side of the customer. A small gesture now (a proactive call, a \nservice credit) prevents a much bigger problem later.",
+            "page": 1
+          },
+          {
+            "content": "been in transit for several days, an extra move to a locker increases handling risk. Use your \njudgment.",
+            "page": 8
+          }
+        ],
+        "escalation_signals": {
+          "has_triggers": true,
+          "trigger_count": 1,
+          "triggers": [
+            "AUTOMATIC: Perishable with 5.0hr delay (>4hr threshold)"
+          ]
+        },
+        "noise_override": false,
+        "guardrail_triggered": false,
+        "resolution_output": {
+          "is_exception": "YES",
+          "resolution": "REPLACE",
+          "rationale": "1. The delivery event has a status code of 'WEATHER_DELAY' with a description indicating a heavy snow causing a 5-hour delay. According to the classification rules, this is an actionable exception (YES).  \n2. The package type is 'PERISHABLE', which is critical in this situation. The playbook states that for perishable items, a weather delay exceeding 4 hours necessitates a replacement (Priority Rule 1).  \n3. The escalation signals confirm that the delay exceeds the 4-hour threshold for perishable items, reinforcing the need for a replacement.  \n4. Therefore, the appropriate resolution action is to REPLACE the perishable item due to the weather delay."
+        },
+        "critic_resolution_output": {
+          "decision": "ACCEPT",
+          "rationale": "The Resolution Agent correctly classified the situation as an exception due to the 'WEATHER_DELAY' status code and the critical nature of the perishable package. The playbook clearly states that for perishable items, a weather delay exceeding 4 hours requires a replacement. The escalation signals also confirm the automatic trigger for replacement due to the delay exceeding the 4-hour threshold. Therefore, the decision to replace the perishable item is consistent with the playbook rules and the escalation signals, making the resolution appropriate."
+        },
+        "resolution_revision_count": 0,
+        "critic_feedback": "",
+        "communication_output": {
+          "tone_label": "FORMAL",
+          "communication_message": "Dear Ms. Garcia,\n\nWe regret to inform you that your delivery has been delayed due to heavy snow, which has blocked the route and resulted in an estimated delay of 5 hours. Given that your package contains perishable items, we are committed to ensuring your satisfaction and will be replacing the affected items promptly. You can expect a follow-up notification with further details regarding the replacement process shortly.\n\nThank you for your understanding and patience during this time."
+        },
+        "critic_communication_output": {
+          "decision": "ACCEPT",
+          "rationale": "The message is appropriate for a VIP customer, using a formal tone as required. It clearly explains the situation (weather delay) and the resolution action (replacement of perishable items). The message is professional, clear, and suitable for email communication. There is no PII leakage or misleading information present."
+        },
+        "next_agent": "END",
+        "max_loops": 2,
+        "escalated": true,
+        "tool_calls_log": [
+          "PREPROCESSOR: Deduplicated rows",
+          "TOOL: lookup_customer_profile(CUST-004, pii=False)",
+          "TOOL: lookup_customer_profile(CUST-004, pii=True)",
+          "TOOL: check_locker_availability",
+          "TOOL: search_playbook(query)",
+          "TOOL: check_escalation_rules",
+          "AGENT: resolution_agent invoked",
+          "AGENT: critic_resolution invoked",
+          "AGENT: communication_agent invoked",
+          "AGENT: critic_communication invoked"
+        ],
+        "trajectory_log": [
+          "preprocessor: 2 raw rows -> 1 after dedup",
+          "resolution_agent: is_exception=YES, resolution=REPLACE",
+          "critic_resolution: decision=ACCEPT",
+          "orchestrator: Forced escalation from rule engine - ['AUTOMATIC: Perishable with 5.0hr delay (>4hr threshold)']",
+          "communication_agent: tone=FORMAL",
+          "orchestrator: Forced escalation from rule engine - ['AUTOMATIC: Perishable with 5.0hr delay (>4hr threshold)']",
+          "critic_communication: decision=ACCEPT",
+          "orchestrator: Forced escalation from rule engine - ['AUTOMATIC: Perishable with 5.0hr delay (>4hr threshold)']",
+          "finalize: actions={\"shipment_id\": \"SHP-007\", \"is_exception\": \"YES\", \"resolution\": \"REPLACE\", \"escalated\": true, \"tone\": \"FORMAL\", \"message\": \"Dear Ms. Garcia,\\n\\nWe regret to inform you that your delivery has been delayed due to heavy snow, which has blocked the route and resulted in an estimated delay of 5 hours. Given that your package contains perishable items, we are committed to ensuring your satisfaction and will be replacing the affected items promptly. You can expect a follow-up notification with further details regarding the replacement process shortly.\\n\\nThank you for your understanding and patience during this time.\", \"revision_count\": 0, \"guardrail_blocked\": false}; latency=13.534s"
+        ],
+        "start_time": 1775509415.7891893,
+        "latency_sec": 13.534489631652832,
+        "final_actions": [
+          {
+            "shipment_id": "SHP-007",
+            "is_exception": "YES",
+            "resolution": "REPLACE",
+            "escalated": true,
+            "tone": "FORMAL",
+            "message": "Dear Ms. Garcia,\n\nWe regret to inform you that your delivery has been delayed due to heavy snow, which has blocked the route and resulted in an estimated delay of 5 hours. Given that your package contains perishable items, we are committed to ensuring your satisfaction and will be replacing the affected items promptly. You can expect a follow-up notification with further details regarding the replacement process shortly.\n\nThank you for your understanding and patience during this time.",
+            "revision_count": 0,
+            "guardrail_blocked": false
+          }
+        ]
+      },
+      "report": {
+        "shipment_id": "SHP-007",
+        "task_completion": {
+          "exception_correct": true,
+          "resolution_correct": true,
+          "tone_correct": true,
+          "task_complete": true
+        },
+        "escalation_correct": true,
+        "tool_call_correct": true,
+        "coherence": {
+          "score": 5,
+          "justification": "All decisions are logically consistent with a clear rationale chain, appropriate resolution, justified critic decisions, and consistent tone."
+        },
+        "token_efficiency": {
+          "prompt_tokens": 0,
+          "completion_tokens": 0,
+          "total_tokens": 0,
+          "estimated_cost_usd": 0.0,
+          "tokens_per_resolution": null
+        },
+        "trajectory_drift": {
+          "trajectory_len": 9,
+          "tool_calls_len": 10,
+          "revision_count": 0,
+          "drift_flag": false
+        },
+        "semantic_similarity": {
+          "similarity": 0.0,
+          "golden_present": false
+        },
+        "latency_sec": 13.534489631652832,
+        "citations": [
+          "Page 7",
+          "Page 6",
+          "Page 2",
+          "Page 9"
+        ]
+      },
+      "error": null,
+      "duration_sec": 14.6868,
+      "timestamp": "2026-04-06T21:03:35+00:00"
+    },
+    {
+      "shipment_id": "SHP-008",
+      "final_state": {
+        "raw_rows": [
+          {
+            "shipment_id": "SHP-008",
+            "timestamp": "2026-03-05T13:45:00",
+            "status_code": "ATTEMPTED",
+            "status_description": "Went to address again customer not in neighbor said they work late",
+            "customer_id": "CUST-011",
+            "delivery_address": "88 Elm Boulevard, Westdale, 10003",
+            "package_type": "STANDARD",
+            "package_size": "SMALL",
+            "attempt_number": "2",
+            "is_duplicate_scan": "False"
+          }
+        ],
+        "shipment_id": "SHP-008",
+        "consolidated_event": {
+          "shipment_id": "SHP-008",
+          "timestamp": "2026-03-05T13:45:00",
+          "status_code": "ATTEMPTED",
+          "status_description": "Went to address again customer not in neighbor said they work late",
+          "customer_id": "CUST-011",
+          "delivery_address": "88 Elm Boulevard, Westdale, 10003",
+          "package_type": "STANDARD",
+          "package_size": "SMALL",
+          "attempt_number": 2,
+          "prior_attempt_notes": [],
+          "total_rows": 1,
+          "duplicates_removed": 0
+        },
+        "customer_profile": {
+          "customer_id": "CUST-011",
+          "tier": "STANDARD",
+          "preferred_channel": "SMS",
+          "exceptions_last_90d": 6,
+          "active_credit": 0.0
+        },
+        "customer_profile_full": {
+          "customer_id": "CUST-011",
+          "name": "Thomas Martin",
+          "tier": "STANDARD",
+          "preferred_channel": "SMS",
+          "exceptions_last_90d": 6,
+          "active_credit": 0.0
+        },
+        "locker_availability": [
+          {
+            "locker_id": "LOC-003",
+            "address": "88 Elm Boulevard, Westdale",
+            "zip_code": "10003",
+            "capacity_status": "FULL",
+            "operating_hours": "24 hours",
+            "max_package_size": "LARGE",
+            "eligible": false,
+            "reason": "Locker is FULL"
+          }
+        ],
+        "playbook_context": [
+          {
+            "content": "2. Address Mismatches \nAddress issues come in a few flavors. The building number doesn’t exist, the street name is \nwrong, the apartment number is missing, or the address is valid but clearly not a residential \ndelivery point (like a vacant lot or a construction site). Each needs a slightly different approach. \nBuilding or Street Not Found \nIf the driver can’t locate the address at all, hold the shipment at the depot and contact the \ncustomer to verify. Send a notification explaining that we were unable to locate the delivery \naddress and asking them to confirm or update it. Give them 48 hours to respond. If they don’t \nrespond within 48 hours, initiate a return-to-sender. For VIP customers, extend this to 72 hours \nand have the supervisor attempt a direct phone call before returning. \nMissing Apartment or Unit Number \nThis happens a lot with large apartment complexes. The driver can find the building, but",
+            "page": 3
+          },
+          {
+            "content": "customer, if the package is perishable, do not hold at the depot; see Section 5 for perishable \nhandling instead. \nDriver Notes \nPay attention to what the driver wrote. The notes are often messy and abbreviated, but they \ncontain important context. If the driver mentions a security gate, a broken buzzer, or a dog, that \ninformation should influence whether we reattempt or reroute. For example, if the driver says \nthe gate code doesn’t work, there’s no point sending them back tomorrow with the same code. \nIn that case, contact the customer to get an updated access code before scheduling the \nreattempt.",
+            "page": 2
+          },
+          {
+            "content": "4. Refused Deliveries \nSometimes the customer is home but doesn’t want the package. This could be because they \ndidn’t order it, they’ve already cancelled the order, or they’re unhappy with the shipping time \nand no longer want it. \nStandard Refusal Process \n1.​ Accept the refusal - never argue with the customer or pressure them to accept. \n2.​ Log the refusal reason in the shipment notes based on what the driver reported. \n3.​ Initiate the return-to-sender process. The package goes back to the depot and ships \nback to the origin within 2 business days. \n4.​ Send the customer a confirmation that we’ve processed their refusal and that the item \nis being returned. \nDidn’t Order It \nIf the customer says they didn’t order the item, this could be a misdelivery (wrong address) or \nan unsolicited shipment. Check the shipment record to verify the address matches. If there’s a \nmismatch, this is actually an address issue - treat it under Section 2. If the address matches but",
+            "page": 5
+          },
+          {
+            "content": "gets reviewed later, we need to understand why you made the call you did. \n•​\nTime matters. The faster we resolve an exception, the less likely it is to turn into a \ncomplaint. Aim to have a resolution path chosen within 30 minutes of the exception \nbeing flagged. \n•​\nWhen in doubt, err on the side of the customer. A small gesture now (a proactive call, a \nservice credit) prevents a much bigger problem later.",
+            "page": 1
+          },
+          {
+            "content": "5. Weather Delays \nBad weather is outside our control, but how we communicate about it is not. When weather \nevents impact delivery routes, the key priorities are keeping customers informed and protecting \nperishable shipments. \nStandard Packages \nFor non-perishable, non-fragile packages, a weather delay is the most straightforward \nexception to handle. Send the customer a notification explaining that severe weather is causing \ndelays in their area and providing an updated estimated delivery window. Be honest about the \ntimeline - don’t promise next-day if the roads might still be bad. SLA timers are paused during \ndeclared weather events, so there’s no penalty for the delay itself, only for failing to \ncommunicate. \nPerishable Packages - CRITICAL \nThis is where weather delays get serious. Perishable items have a hard time limit, and weather \ndoesn’t care about our delivery windows. Here’s the rule:",
+            "page": 6
+          }
+        ],
+        "escalation_signals": {
+          "has_triggers": true,
+          "trigger_count": 1,
+          "triggers": [
+            "DISCRETIONARY: Standard customer with 6 exceptions in 90d (>5)"
+          ]
+        },
+        "noise_override": false,
+        "guardrail_triggered": false,
+        "resolution_output": {
+          "is_exception": "YES",
+          "resolution": "RESCHEDULE",
+          "rationale": "1. The delivery event status is 'ATTEMPTED', indicating a failed delivery attempt, which classifies it as an exception (Rule: Exceptions include ATTEMPTED deliveries).  \n2. This is the 2nd attempt to deliver the package, and the customer was not available at the address. The neighbor mentioned that the customer works late, which suggests that the delivery may need to be rescheduled to a time when the customer is available (Rule: For 1st-2nd ATTEMPTED deliveries with no eligible lockers, use RESCHEDULE).  \n3. The locker availability check shows that the only nearby locker is FULL, making it ineligible for rerouting (Rule: 1st-2nd ATTEMPTED deliveries require eligible lockers for REROUTE_TO_LOCKER).  \n4. Given the customer's profile as a STANDARD tier with a history of 6 exceptions in the last 90 days, it is important to proactively contact the customer to confirm their availability for rescheduling (Rule: Address issues and failed attempts should be handled with customer communication).  \n5. Therefore, the appropriate resolution action is to RESCHEDULE the delivery."
+        },
+        "critic_resolution_output": {
+          "decision": "ESCALATE",
+          "rationale": "The resolution to RESCHEDULE is consistent with the playbook rules for a second delivery attempt where the customer was not available, and no eligible lockers are available. However, the presence of a DISCRETIONARY escalation trigger due to the customer's high exception history (6 exceptions in 90 days) requires supervisor awareness. According to the guidelines, discretionary triggers indicate systemic patterns that need to be reviewed by a supervisor, even if the resolution action itself is correct. Therefore, the case should be escalated for further review."
+        },
+        "resolution_revision_count": 0,
+        "critic_feedback": "",
+        "communication_output": {
+          "tone_label": "CASUAL",
+          "communication_message": "Hey Thomas! We tried delivering your package again, but you weren't home. The neighbor mentioned you work late, so we’ll need to reschedule the delivery for a time that works better for you. Let us know your preferred time, and we’ll make it happen!"
+        },
+        "critic_communication_output": {
+          "decision": "ESCALATE",
+          "rationale": "The message contains inappropriate content by mentioning information about the customer's neighbor, which could be considered a breach of privacy. Additionally, the message assumes the customer's work schedule without confirmation, which could be misleading. These issues require supervisor review to ensure compliance with privacy standards and accurate communication."
+        },
+        "next_agent": "END",
+        "max_loops": 2,
+        "escalated": true,
+        "tool_calls_log": [
+          "PREPROCESSOR: Deduplicated rows",
+          "TOOL: lookup_customer_profile(CUST-011, pii=False)",
+          "TOOL: lookup_customer_profile(CUST-011, pii=True)",
+          "TOOL: check_locker_availability",
+          "TOOL: search_playbook(query)",
+          "TOOL: check_escalation_rules",
+          "AGENT: resolution_agent invoked",
+          "AGENT: critic_resolution invoked",
+          "AGENT: communication_agent invoked",
+          "AGENT: critic_communication invoked"
+        ],
+        "trajectory_log": [
+          "preprocessor: 1 raw rows -> 1 after dedup",
+          "resolution_agent: is_exception=YES, resolution=RESCHEDULE",
+          "critic_resolution: decision=ESCALATE",
+          "orchestrator: Escalation from discretionary triggers - ['DISCRETIONARY: Standard customer with 6 exceptions in 90d (>5)']",
+          "communication_agent: tone=CASUAL",
+          "orchestrator: Escalation from discretionary triggers - ['DISCRETIONARY: Standard customer with 6 exceptions in 90d (>5)']",
+          "critic_communication: decision=ESCALATE",
+          "orchestrator: Escalation from discretionary triggers - ['DISCRETIONARY: Standard customer with 6 exceptions in 90d (>5)']",
+          "finalize: actions={\"shipment_id\": \"SHP-008\", \"is_exception\": \"YES\", \"resolution\": \"RESCHEDULE\", \"escalated\": true, \"tone\": \"CASUAL\", \"message\": \"Hey Thomas! We tried delivering your package again, but you weren't home. The neighbor mentioned you work late, so we\\u2019ll need to reschedule the delivery for a time that works better for you. Let us know your preferred time, and we\\u2019ll make it happen!\", \"revision_count\": 0, \"guardrail_blocked\": false}; latency=12.637s"
+        ],
+        "start_time": 1775509430.4764757,
+        "latency_sec": 12.63731598854065,
+        "final_actions": [
+          {
+            "shipment_id": "SHP-008",
+            "is_exception": "YES",
+            "resolution": "RESCHEDULE",
+            "escalated": true,
+            "tone": "CASUAL",
+            "message": "Hey Thomas! We tried delivering your package again, but you weren't home. The neighbor mentioned you work late, so we’ll need to reschedule the delivery for a time that works better for you. Let us know your preferred time, and we’ll make it happen!",
+            "revision_count": 0,
+            "guardrail_blocked": false
+          }
+        ]
+      },
+      "report": {
+        "shipment_id": "SHP-008",
+        "task_completion": {
+          "exception_correct": true,
+          "resolution_correct": true,
+          "tone_correct": true,
+          "task_complete": true
+        },
+        "escalation_correct": true,
+        "tool_call_correct": true,
+        "coherence": {
+          "score": 4,
+          "justification": "The reasoning trajectory is mostly consistent with appropriate exception classification and resolution, but there are minor gaps in communication tone and privacy considerations."
+        },
+        "token_efficiency": {
+          "prompt_tokens": 0,
+          "completion_tokens": 0,
+          "total_tokens": 0,
+          "estimated_cost_usd": 0.0,
+          "tokens_per_resolution": null
+        },
+        "trajectory_drift": {
+          "trajectory_len": 9,
+          "tool_calls_len": 10,
+          "revision_count": 0,
+          "drift_flag": false
+        },
+        "semantic_similarity": {
+          "similarity": 0.0,
+          "golden_present": false
+        },
+        "latency_sec": 12.63731598854065,
+        "citations": [
+          "Page 4",
+          "Page 3",
+          "Page 6",
+          "Page 2",
+          "Page 7"
+        ]
+      },
+      "error": null,
+      "duration_sec": 14.5145,
+      "timestamp": "2026-04-06T21:03:50+00:00"
+    },
+    {
+      "shipment_id": "SHP-009",
+      "final_state": {
+        "raw_rows": [
+          {
+            "shipment_id": "SHP-009",
+            "timestamp": "2026-03-05T09:20:00",
+            "status_code": "DAMAGED",
+            "status_description": "Package is leaking some liquid from bottom smells like food item spoiled maybe",
+            "customer_id": "CUST-006",
+            "delivery_address": "22 Maple Drive, Greenfield, 10001",
+            "package_type": "PERISHABLE",
+            "package_size": "MEDIUM",
+            "attempt_number": "1",
+            "is_duplicate_scan": "False"
+          }
+        ],
+        "shipment_id": "SHP-009",
+        "consolidated_event": {
+          "shipment_id": "SHP-009",
+          "timestamp": "2026-03-05T09:20:00",
+          "status_code": "DAMAGED",
+          "status_description": "Package is leaking some liquid from bottom smells like food item spoiled maybe",
+          "customer_id": "CUST-006",
+          "delivery_address": "22 Maple Drive, Greenfield, 10001",
+          "package_type": "PERISHABLE",
+          "package_size": "MEDIUM",
+          "attempt_number": 1,
+          "prior_attempt_notes": [],
+          "total_rows": 1,
+          "duplicates_removed": 0
+        },
+        "customer_profile": {
+          "customer_id": "CUST-006",
+          "tier": "PREMIUM",
+          "preferred_channel": "EMAIL",
+          "exceptions_last_90d": 3,
+          "active_credit": 5.0
+        },
+        "customer_profile_full": {
+          "customer_id": "CUST-006",
+          "name": "Sarah Brown",
+          "tier": "PREMIUM",
+          "preferred_channel": "EMAIL",
+          "exceptions_last_90d": 3,
+          "active_credit": 5.0
+        },
+        "locker_availability": [
+          {
+            "locker_id": "LOC-001",
+            "address": "150 Main Street, Greenfield",
+            "zip_code": "10001",
+            "capacity_status": "AVAILABLE",
+            "operating_hours": "6AM-10PM",
+            "max_package_size": "LARGE",
+            "eligible": true,
+            "reason": "Compatible"
+          }
+        ],
+        "playbook_context": [
+          {
+            "content": "to deliver as-is if they accept the risk, or we can initiate a replacement with the shipper. \n•​\nSevere damage (package leaking, contents visible, strong odor): Do not deliver under \nany circumstances. Initiate an immediate replacement order with the shipper and notify \nthe customer with an apology and an updated timeline. \nFragile Items \nFor packages marked as FRAGILE, lower your threshold. What would be minor damage for a \nstandard package should be treated as moderate for a fragile one. Always err on the side of \npulling the package rather than delivering a potentially broken item. \nCustomer Tier Considerations \nFor VIP customers, any damaged package should trigger a proactive apology notification, even \nif the damage is minor and you’re proceeding with delivery. Include a service credit of $5 for \nminor damage, $10 for moderate damage. For severe damage, the supervisor should \npersonally handle the communication.",
+            "page": 4
+          },
+          {
+            "content": "an unsolicited shipment. Check the shipment record to verify the address matches. If there’s a \nmismatch, this is actually an address issue - treat it under Section 2. If the address matches but \nthe customer insists they didn’t order it, proceed with the standard return process and flag the \norder for review by customer service. \nPost-Refusal Outreach \nFor Premium and VIP customers who refuse a delivery, the shift supervisor should review the \ncase within 24 hours. Repeated refusals from the same customer may indicate a systemic issue \nwith their orders that needs upstream attention.",
+            "page": 5
+          },
+          {
+            "content": "customer, if the package is perishable, do not hold at the depot; see Section 5 for perishable \nhandling instead. \nDriver Notes \nPay attention to what the driver wrote. The notes are often messy and abbreviated, but they \ncontain important context. If the driver mentions a security gate, a broken buzzer, or a dog, that \ninformation should influence whether we reattempt or reroute. For example, if the driver says \nthe gate code doesn’t work, there’s no point sending them back tomorrow with the same code. \nIn that case, contact the customer to get an updated access code before scheduling the \nreattempt.",
+            "page": 2
+          },
+          {
+            "content": "been in transit for several days, an extra move to a locker increases handling risk. Use your \njudgment.",
+            "page": 8
+          },
+          {
+            "content": "5. Weather Delays \nBad weather is outside our control, but how we communicate about it is not. When weather \nevents impact delivery routes, the key priorities are keeping customers informed and protecting \nperishable shipments. \nStandard Packages \nFor non-perishable, non-fragile packages, a weather delay is the most straightforward \nexception to handle. Send the customer a notification explaining that severe weather is causing \ndelays in their area and providing an updated estimated delivery window. Be honest about the \ntimeline - don’t promise next-day if the roads might still be bad. SLA timers are paused during \ndeclared weather events, so there’s no penalty for the delay itself, only for failing to \ncommunicate. \nPerishable Packages - CRITICAL \nThis is where weather delays get serious. Perishable items have a hard time limit, and weather \ndoesn’t care about our delivery windows. Here’s the rule:",
+            "page": 6
+          }
+        ],
+        "escalation_signals": {
+          "has_triggers": true,
+          "trigger_count": 1,
+          "triggers": [
+            "AUTOMATIC: Damaged perishable package"
+          ]
+        },
+        "noise_override": false,
+        "guardrail_triggered": false,
+        "resolution_output": {
+          "is_exception": "YES",
+          "resolution": "REPLACE",
+          "rationale": "1. The delivery event status is 'DAMAGED', which qualifies as an exception according to the classification rules. \n2. The package is identified as 'PERISHABLE' and is leaking liquid, indicating severe damage (strong odor and contents visible), which is a critical situation. \n3. According to the playbook, for severe damage, we should not deliver the package under any circumstances and must initiate an immediate replacement order with the shipper. \n4. The customer is a 'PREMIUM' tier, which means we should also notify them with an apology and an updated timeline regarding the replacement. \n5. The escalation signals indicate an automatic trigger for a damaged perishable package, reinforcing the need for immediate action. \n6. Therefore, the appropriate resolution is to REPLACE the damaged package."
+        },
+        "critic_resolution_output": {
+          "decision": "ACCEPT",
+          "rationale": "The Resolution Agent correctly classified the situation as an exception due to the 'DAMAGED' status of the package, which is leaking and has a strong odor, indicating severe damage. According to the playbook rules, such severe damage requires initiating an immediate replacement order with the shipper and notifying the customer with an apology and updated timeline. The customer is a 'PREMIUM' tier, which aligns with the playbook's guidance to provide proactive communication. The presence of an automatic escalation trigger for a damaged perishable package further supports the decision to replace the package. Therefore, the resolution to REPLACE the package is consistent with the playbook rules and the escalation signals."
+        },
+        "resolution_revision_count": 0,
+        "critic_feedback": "",
+        "communication_output": {
+          "tone_label": "FORMAL",
+          "communication_message": "Dear Ms. Brown,\n\nWe regret to inform you that your recent delivery has encountered an issue. The package was found to be damaged, leaking liquid, and emitting an unpleasant odor, which indicates spoilage of the perishable items inside. We are committed to resolving this matter promptly and will be initiating a replacement order for you.\n\nYou can expect the replacement to be processed shortly, and we appreciate your understanding in this situation. Thank you for your continued trust in our service."
+        },
+        "critic_communication_output": {
+          "decision": "ESCALATE",
+          "rationale": "The message contains unnecessary details about the condition of the damaged package, such as 'leaking liquid' and 'emitting an unpleasant odor,' which are not appropriate for a formal communication to a PREMIUM customer. These details could be perceived as unprofessional and may not be necessary to convey the resolution action. Additionally, the message should focus more on the resolution and assurance rather than the specifics of the damage. This requires supervisor review to ensure the tone and content are suitable for a PREMIUM customer."
+        },
+        "next_agent": "END",
+        "max_loops": 2,
+        "escalated": true,
+        "tool_calls_log": [
+          "PREPROCESSOR: Deduplicated rows",
+          "TOOL: lookup_customer_profile(CUST-006, pii=False)",
+          "TOOL: lookup_customer_profile(CUST-006, pii=True)",
+          "TOOL: check_locker_availability",
+          "TOOL: search_playbook(query)",
+          "TOOL: check_escalation_rules",
+          "AGENT: resolution_agent invoked",
+          "AGENT: critic_resolution invoked",
+          "AGENT: communication_agent invoked",
+          "AGENT: critic_communication invoked"
+        ],
+        "trajectory_log": [
+          "preprocessor: 1 raw rows -> 1 after dedup",
+          "resolution_agent: is_exception=YES, resolution=REPLACE",
+          "critic_resolution: decision=ACCEPT",
+          "orchestrator: Forced escalation from rule engine - ['AUTOMATIC: Damaged perishable package']",
+          "communication_agent: tone=FORMAL",
+          "orchestrator: Forced escalation from rule engine - ['AUTOMATIC: Damaged perishable package']",
+          "critic_communication: decision=ESCALATE",
+          "orchestrator: Forced escalation from rule engine - ['AUTOMATIC: Damaged perishable package']",
+          "finalize: actions={\"shipment_id\": \"SHP-009\", \"is_exception\": \"YES\", \"resolution\": \"REPLACE\", \"escalated\": true, \"tone\": \"FORMAL\", \"message\": \"Dear Ms. Brown,\\n\\nWe regret to inform you that your recent delivery has encountered an issue. The package was found to be damaged, leaking liquid, and emitting an unpleasant odor, which indicates spoilage of the perishable items inside. We are committed to resolving this matter promptly and will be initiating a replacement order for you.\\n\\nYou can expect the replacement to be processed shortly, and we appreciate your understanding in this situation. Thank you for your continued trust in our service.\", \"revision_count\": 0, \"guardrail_blocked\": false}; latency=12.883s"
+        ],
+        "start_time": 1775509444.9956365,
+        "latency_sec": 12.883285999298096,
+        "final_actions": [
+          {
+            "shipment_id": "SHP-009",
+            "is_exception": "YES",
+            "resolution": "REPLACE",
+            "escalated": true,
+            "tone": "FORMAL",
+            "message": "Dear Ms. Brown,\n\nWe regret to inform you that your recent delivery has encountered an issue. The package was found to be damaged, leaking liquid, and emitting an unpleasant odor, which indicates spoilage of the perishable items inside. We are committed to resolving this matter promptly and will be initiating a replacement order for you.\n\nYou can expect the replacement to be processed shortly, and we appreciate your understanding in this situation. Thank you for your continued trust in our service.",
+            "revision_count": 0,
+            "guardrail_blocked": false
+          }
+        ]
+      },
+      "report": {
+        "shipment_id": "SHP-009",
+        "task_completion": {
+          "exception_correct": true,
+          "resolution_correct": true,
+          "tone_correct": true,
+          "task_complete": true
+        },
+        "escalation_correct": true,
+        "tool_call_correct": true,
+        "coherence": {
+          "score": 4,
+          "justification": "The reasoning trajectory is mostly consistent with a clear rationale for exception classification and resolution, but there is a minor gap in communication tone appropriateness for a PREMIUM customer."
+        },
+        "token_efficiency": {
+          "prompt_tokens": 0,
+          "completion_tokens": 0,
+          "total_tokens": 0,
+          "estimated_cost_usd": 0.0,
+          "tokens_per_resolution": null
+        },
+        "trajectory_drift": {
+          "trajectory_len": 9,
+          "tool_calls_len": 10,
+          "revision_count": 0,
+          "drift_flag": false
+        },
+        "semantic_similarity": {
+          "similarity": 0.0,
+          "golden_present": false
+        },
+        "latency_sec": 12.883285999298096,
+        "citations": [
+          "Page 5",
+          "Page 6",
+          "Page 3",
+          "Page 9",
+          "Page 7"
+        ]
+      },
+      "error": null,
+      "duration_sec": 15.7243,
+      "timestamp": "2026-04-06T21:04:04+00:00"
+    },
+    {
+      "shipment_id": "SHP-010",
+      "final_state": {
+        "raw_rows": [
+          {
+            "shipment_id": "SHP-010",
+            "timestamp": "2026-03-05T08:45:00",
+            "status_code": "SCANNED",
+            "status_description": "Scanned at depot during morning sort",
+            "customer_id": "CUST-012",
+            "delivery_address": "170 Birch Court, Southfield, 10006",
+            "package_type": "STANDARD",
+            "package_size": "SMALL",
+            "attempt_number": "0",
+            "is_duplicate_scan": "False"
+          }
+        ],
+        "shipment_id": "SHP-010",
+        "consolidated_event": {
+          "shipment_id": "SHP-010",
+          "timestamp": "2026-03-05T08:45:00",
+          "status_code": "SCANNED",
+          "status_description": "Scanned at depot during morning sort",
+          "customer_id": "CUST-012",
+          "delivery_address": "170 Birch Court, Southfield, 10006",
+          "package_type": "STANDARD",
+          "package_size": "SMALL",
+          "attempt_number": 0,
+          "prior_attempt_notes": [],
+          "total_rows": 1,
+          "duplicates_removed": 0
+        },
+        "customer_profile": {},
+        "customer_profile_full": {},
+        "locker_availability": [],
+        "playbook_context": [],
+        "escalation_signals": {},
+        "noise_override": true,
+        "guardrail_triggered": false,
+        "resolution_output": {
+          "is_exception": "NO",
+          "resolution": "N/A",
+          "rationale": "Status code SCANNED with routine description. No anomaly indicators. Classified as noise by preprocessor guardrail."
+        },
+        "critic_resolution_output": {},
+        "resolution_revision_count": 0,
+        "critic_feedback": "",
+        "communication_output": {},
+        "critic_communication_output": {},
+        "next_agent": "END",
+        "max_loops": 2,
+        "escalated": false,
+        "tool_calls_log": [
+          "PREPROCESSOR: Deduplicated rows",
+          "PREPROCESSOR: Noise guardrail - routine status with no anomaly"
+        ],
+        "trajectory_log": [
+          "preprocessor: 1 raw rows -> 1 after dedup",
+          "preprocessor: SCANNED flagged as noise by guardrail, skipping tool calls",
+          "orchestrator: Noise override from preprocessor, skipping to finalize",
+          "finalize: actions={\"shipment_id\": \"SHP-010\", \"is_exception\": \"NO\", \"resolution\": \"N/A\", \"escalated\": false, \"tone\": \"N/A\", \"message\": \"\", \"revision_count\": 0, \"guardrail_blocked\": false}; latency=0.019s"
+        ],
+        "start_time": 1775509460.7233999,
+        "latency_sec": 0.018654346466064453,
+        "final_actions": [
+          {
+            "shipment_id": "SHP-010",
+            "is_exception": "NO",
+            "resolution": "N/A",
+            "escalated": false,
+            "tone": "N/A",
+            "message": "",
+            "revision_count": 0,
+            "guardrail_blocked": false
+          }
+        ]
+      },
+      "report": {
+        "shipment_id": "SHP-010",
+        "task_completion": {
+          "exception_correct": true,
+          "resolution_correct": true,
+          "tone_correct": null,
+          "task_complete": true
+        },
+        "escalation_correct": null,
+        "tool_call_correct": false,
+        "coherence": {
+          "score": 5,
+          "justification": "All decisions are logically consistent with a clear rationale chain; the shipment was correctly identified as non-exceptional noise, and no unnecessary actions were taken."
+        },
+        "token_efficiency": {
+          "prompt_tokens": 0,
+          "completion_tokens": 0,
+          "total_tokens": 0,
+          "estimated_cost_usd": 0.0,
+          "tokens_per_resolution": null
+        },
+        "trajectory_drift": {
+          "trajectory_len": 4,
+          "tool_calls_len": 2,
+          "revision_count": 0,
+          "drift_flag": false
+        },
+        "semantic_similarity": {
+          "similarity": 0.0,
+          "golden_present": false
+        },
+        "latency_sec": 0.018654346466064453,
+        "citations": []
+      },
+      "error": null,
+      "duration_sec": 1.576,
+      "timestamp": "2026-04-06T21:04:20+00:00"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2026-04-06T21:04:22+00:00",
+    "n": 10,
+    "max_loops": 2,
+    "eval_llm": "ChatOpenAI",
+    "embedder": "HuggingFaceEmbeddings"
+  }
+}

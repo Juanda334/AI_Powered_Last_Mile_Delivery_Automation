@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"import ast; ast.parse\\(open\\('src/AI_Powered_Last_Mile_Delivery_Automation/components/data_ingestion.py'\\).read\\(\\)\\); print\\('data_ingestion.py: OK'\\)\")",
+      "Bash(python -c \"import ast; ast.parse\\(open\\('src/AI_Powered_Last_Mile_Delivery_Automation/utils/document_ops.py'\\).read\\(\\)\\); print\\('document_ops.py: OK'\\)\")",
+      "Bash(python -c \"import ast; ast.parse\\(open\\('src/AI_Powered_Last_Mile_Delivery_Automation/utils/model_loader.py'\\).read\\(\\)\\); print\\('model_loader.py: OK'\\)\")",
+      "Bash(where python3:*)",
+      "Bash(where python:*)",
+      "Bash(where conda:*)",
+      "Bash(python3 -c \"import ast; ast.parse\\(open\\('src/AI_Powered_Last_Mile_Delivery_Automation/components/data_ingestion.py'\\).read\\(\\)\\); print\\('data_ingestion.py: OK'\\)\")",
+      "Bash(python3 -c \"import ast; ast.parse\\(open\\('src/AI_Powered_Last_Mile_Delivery_Automation/utils/document_ops.py'\\).read\\(\\)\\); print\\('document_ops.py: OK'\\)\")",
+      "Bash(python3 -c \"import ast; ast.parse\\(open\\('src/AI_Powered_Last_Mile_Delivery_Automation/utils/model_loader.py'\\).read\\(\\)\\); print\\('model_loader.py: OK'\\)\")",
+      "Read(//c/Users/juavalde2/anaconda3/**)",
+      "Read(//c/Users/juavalde2/miniconda3/**)",
+      "Read(//c/ProgramData/anaconda3/**)",
+      "Bash(conda info:*)",
+      "Bash(conda activate:*)",
+      "Bash(python -c \"import ast; ast.parse\\(open\\('src/AI_Powered_Last_Mile_Delivery_Automation/components/resolution_agent.py', encoding='utf-8'\\).read\\(\\)\\); ast.parse\\(open\\('src/AI_Powered_Last_Mile_Delivery_Automation/components/critic_agent.py', encoding='utf-8'\\).read\\(\\)\\); ast.parse\\(open\\('src/AI_Powered_Last_Mile_Delivery_Automation/components/router_agent.py', encoding='utf-8'\\).read\\(\\)\\); print\\('OK'\\)\")"
+    ]
+  }
+}

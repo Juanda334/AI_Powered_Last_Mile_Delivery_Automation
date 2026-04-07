@@ -1,0 +1,30 @@
+# AI_Powered_Last_Mile_Delivery_Automation
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+venv/
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# DVC
+/artifacts/
+
+# Environment
+.env
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

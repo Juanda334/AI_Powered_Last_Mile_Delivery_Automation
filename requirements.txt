@@ -1,0 +1,56 @@
+# AI_Powered_Last_Mile_Delivery_Automation — dependencies
+# Core ML
+numpy
+pandas
+scikit-learn
+scipy
+
+# Deep Learning (uncomment as needed)
+# torch
+# tensorflow
+
+# Experiment tracking & pipeline
+dvc
+mlflow
+
+# API serving
+fastapi
+uvicorn[standard]
+pydantic
+
+# Utilities
+python-dotenv
+PyYAML
+python-box
+ensure
+joblib
+types-PyYAML
+
+# LangChain & RAG
+langchain
+langchain-community
+langchain-openai
+langchain-huggingface
+langchain-chroma
+langchain-text-splitters
+
+# Vector stores & embeddings
+faiss-cpu
+chromadb
+openai
+
+# Document processing
+PyMuPDF
+docx2txt
+
+# Notebook support
+notebook
+ipykernel
+
+# LangGraph orchestration & observability
+langgraph
+langsmith
+
+# Streamlit frontend & HTTP client
+streamlit
+httpx

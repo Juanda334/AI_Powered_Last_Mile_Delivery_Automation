@@ -1,0 +1,4 @@
+# Dev / CI-only dependencies — NOT included in the production Docker image.
+-r requirements.txt
+pytest
+ruff

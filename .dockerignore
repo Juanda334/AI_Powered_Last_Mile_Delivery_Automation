@@ -1,0 +1,52 @@
+# Version control
+.git
+.github
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.egg-info
+dist
+build
+.eggs
+venv
+.venv
+
+# IDE
+.vscode
+.idea
+
+# Testing
+tests
+.pytest_cache
+pytest.ini
+
+# DVC / ML artifacts
+dvc.yaml
+dvc.lock
+params.yaml
+schema.yaml
+artifacts
+
+# Docs & notebooks
+notebooks
+docs
+CLAUDE.md
+README.md
+
+# Logs (generated at runtime)
+logs
+
+# Secrets & env
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Dev config
+.claude
+requirements-dev.txt

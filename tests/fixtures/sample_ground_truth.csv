@@ -1,0 +1,5 @@
+shipment_id,is_exception,expected_resolution,expected_tone,should_escalate,ground_truth_reasoning
+SHP-T01,NO,N/A,N/A,N/A,Routine delivery — noise.
+SHP-T02,YES,REPLACE,FORMAL,YES,Damaged perishable — escalate and replace.
+SHP-T02,NO,N/A,N/A,N/A,Duplicate scan.
+SHP-T03,YES,RESCHEDULE,CASUAL,NO,Address not found — reschedule after contacting customer.

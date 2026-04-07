@@ -1,0 +1,14 @@
+shipment_id,timestamp,status_code,status_description,customer_id,delivery_address,package_type,package_size,attempt_number,is_duplicate_scan
+SHP-001,2026-03-05T10:14:00,DELIVERED,"Left at front door, signed by resident",CUST-003,"27 Maple Drive, Greenfield, 10001",STANDARD,SMALL,1,False
+SHP-002,2026-03-05T11:05:00,ATTEMPTED,Nobody home rang bell twice no answer left notice on door,CUST-001,"140 Birch Lane, Westdale, 10003",STANDARD,MEDIUM,1,False
+SHP-002,2026-03-05T11:07:00,ATTEMPTED,Nobody home rang bell twice no answer left notice on door,CUST-001,"140 Birch Lane, Westdale, 10003",STANDARD,MEDIUM,1,True
+SHP-003,2026-03-05T09:45:00,ADDRESS_ISSUE,cant find building 999 on this street asked around nobody knows it,CUST-005,"999 Oak Avenue, Riverside, 10002",STANDARD,SMALL,1,False
+SHP-004,2026-03-05T08:30:00,DAMAGED,Box crushed on one side contents might be damaged visible dent,CUST-008,"12 Pine Road, Northgate, 10004",FRAGILE,LARGE,1,False
+SHP-005,2026-03-05T13:15:00,ATTEMPTED,3rd try customer still not available building has no buzzer system,CUST-011,"88 Elm Boulevard, Westdale, 10003",STANDARD,MEDIUM,3,False
+SHP-006,2026-03-05T10:50:00,REFUSED,Customer opened door said they didnt order this refused to accept,CUST-007,"301 Main Street, Greenfield, 10001",STANDARD,SMALL,1,False
+SHP-007,2026-03-05T14:00:00,WEATHER_DELAY,Heavy snow on route roads blocked estimated 5hr delay,CUST-004,"78 Birch Court, Southfield, 10006",PERISHABLE,MEDIUM,1,False
+SHP-007,2026-03-05T14:03:00,WEATHER_DELAY,Heavy snow on route roads blocked estimated 5hr delay,CUST-004,"78 Birch Court, Southfield, 10006",PERISHABLE,MEDIUM,1,True
+SHP-008,2026-03-05T13:45:00,ATTEMPTED,Went to address again customer not in neighbor said they work late,CUST-011,"88 Elm Boulevard, Westdale, 10003",STANDARD,SMALL,2,False
+SHP-009,2026-03-05T09:20:00,DAMAGED,Package is leaking some liquid from bottom smells like food item spoiled maybe,CUST-006,"22 Maple Drive, Greenfield, 10001",PERISHABLE,MEDIUM,1,False
+SHP-002,2026-03-06T11:15:00,ATTEMPTED,Came back next day still nobody home left 2nd notice,CUST-001,"140 Birch Lane, Westdale, 10003",STANDARD,MEDIUM,2,False
+SHP-010,2026-03-05T08:45:00,SCANNED,Scanned at depot during morning sort,CUST-012,"170 Birch Court, Southfield, 10006",STANDARD,SMALL,0,False

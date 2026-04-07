@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ project_name }} — Prediction Service</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: system-ui, sans-serif; background: #f5f7fa; display: flex;
+               justify-content: center; align-items: center; min-height: 100vh; }
+        .card { background: #fff; padding: 2rem; border-radius: 12px; width: 420px;
+                box-shadow: 0 4px 24px rgba(0,0,0,.08); }
+        h1 { font-size: 1.4rem; margin-bottom: .25rem; }
+        p.sub { color: #666; font-size: .9rem; margin-bottom: 1.5rem; }
+        label { display: block; font-weight: 600; margin-bottom: .3rem; font-size: .9rem; }
+        textarea { width: 100%; padding: .6rem; border: 1px solid #ddd; border-radius: 6px;
+                   font-family: monospace; resize: vertical; min-height: 80px; }
+        button { margin-top: 1rem; width: 100%; padding: .7rem; background: #2563eb;
+                 color: #fff; border: none; border-radius: 6px; font-size: 1rem; cursor: pointer; }
+        button:hover { background: #1d4ed8; }
+        pre#result { margin-top: 1rem; background: #f0f4f8; padding: 1rem;
+                     border-radius: 6px; font-size: .85rem; white-space: pre-wrap;
+                     display: none; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>{{ project_name }}</h1>
+        <p class="sub">{{ description }}</p>
+
+        <label for="features">Features (comma-separated floats)</label>
+        <textarea id="features" placeholder="1.0, 2.5, 3.7"></textarea>
+
+        <button onclick="predict()">Run Prediction</button>
+        <pre id="result"></pre>
+    </div>
+    <script>
+        async function predict() {
+            const raw = document.getElementById("features").value;
+            const features = raw.split(",").map(Number);
+            const res = await fetch("/predict", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ features }),
+            });
+            const data = await res.json();
+            const el = document.getElementById("result");
+            el.style.display = "block";
+            el.textContent = JSON.stringify(data, null, 2);
+        }
+    </script>
+</body>
+</html>

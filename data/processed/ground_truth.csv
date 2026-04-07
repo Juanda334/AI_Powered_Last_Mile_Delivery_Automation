@@ -1,0 +1,14 @@
+shipment_id,is_exception,expected_resolution,expected_tone,should_escalate,ground_truth_reasoning
+SHP-001,NO,N/A,N/A,N/A,Successful delivery. Monitoring agent should filter this as noise.
+SHP-002,YES,RESCHEDULE,FORMAL,YES,1st failed attempt for VIP customer with 5 exceptions in 90d (>=3 threshold). Playbook says escalate for VIP with 3+ exceptions. Reschedule redelivery for next business day.
+SHP-002,NO,N/A,N/A,N/A,Duplicate scan of row 1. Monitoring agent should deduplicate and discard.
+SHP-003,YES,RESCHEDULE,CASUAL,NO,"Address not found. Standard customer, no prior exceptions. Contact customer to verify address, then reschedule. No escalation triggers met."
+SHP-004,YES,REPLACE,FORMAL,YES,Damaged fragile package for VIP customer. Playbook lowers damage threshold for fragile — moderate becomes severe. VIP with 4 exceptions in 90d triggers escalation. Replace.
+SHP-005,YES,REROUTE_TO_LOCKER,CASUAL,YES,"3rd failed attempt — automatic escalation. Locker LOC-003 in zip 10003 is FULL. System should check locker, find it unavailable, and escalate to supervisor. Reroute to locker is the intended resolution but needs supervisor to find alternative."
+SHP-006,YES,RETURN_TO_SENDER,CASUAL,NO,"Customer refused delivery, said they didn't order it. Playbook: return to sender. Standard customer with 1 exception, no escalation triggers."
+SHP-007,YES,REPLACE,FORMAL,YES,"Perishable with 5hr weather delay exceeds 4hr threshold. Playbook: pull from route, initiate replacement. VIP customer. Damaged/compromised perishable triggers escalation."
+SHP-007,NO,N/A,N/A,N/A,Duplicate scan of SHP-007 weather delay. Monitoring agent should deduplicate and discard.
+SHP-008,YES,RESCHEDULE,CASUAL,YES,"2nd attempt. STANDARD customer with 6 exceptions in 90d (>5 discretionary escalation threshold). Locker in zip 10003 is FULL. Reschedule, but escalate due to systemic pattern."
+SHP-009,YES,REPLACE,FORMAL,YES,"Severely damaged perishable — leaking, likely spoiled. Playbook: do not deliver under any circumstances, initiate replacement. Damaged perishable = automatic escalation."
+SHP-002,YES,RESCHEDULE,FORMAL,YES,2nd attempt for VIP with 5 exceptions in 90d (>=3 threshold). Locker in zip 10003 is FULL. Reschedule with time window. Escalate due to VIP exception history.
+SHP-010,NO,N/A,N/A,N/A,Routine depot scan. Monitoring agent should filter as noise.
