@@ -226,7 +226,7 @@ def build_communication_context(view: dict[str, Any]) -> tuple[dict[str, Any], s
     # Include locker details only if the resolution is a reroute
     locker_info = ""
     if resolution.get("resolution") == "REROUTE_TO_LOCKER":
-        eligible = [l for l in lockers if l.get("eligible")]
+        eligible = [loc for loc in lockers if loc.get("eligible")]
         if eligible:
             locker_info = (
                 f"\nLOCKER FOR REROUTE:\n{json.dumps(eligible[0], indent=2)}"

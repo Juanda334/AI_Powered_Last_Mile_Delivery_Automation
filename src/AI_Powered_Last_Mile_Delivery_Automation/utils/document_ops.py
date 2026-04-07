@@ -3,7 +3,7 @@ import fitz                                          # PyMuPDF — PDF text extr
 from pathlib import Path
 from typing import Iterable, List
 from langchain_core.documents import Document
-from langchain_community.document_loaders import PyPDFLoader, Docx2txtLoader, TextLoader
+from langchain_community.document_loaders import Docx2txtLoader, TextLoader
 from AI_Powered_Last_Mile_Delivery_Automation.logger.logging_config import get_module_logger
 from AI_Powered_Last_Mile_Delivery_Automation.exceptions.exception import DocumentPortalException
 from fastapi import UploadFile

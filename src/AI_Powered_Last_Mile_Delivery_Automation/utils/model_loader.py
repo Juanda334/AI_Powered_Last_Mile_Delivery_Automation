@@ -1,10 +1,8 @@
 import os
 import sys
-import json
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from AI_Powered_Last_Mile_Delivery_Automation.utils.config_loader import load_config
-from langchain_openai import ChatOpenAI
 from langchain_huggingface import HuggingFaceEmbeddings
 from AI_Powered_Last_Mile_Delivery_Automation.logger.logging_config import get_module_logger
 from AI_Powered_Last_Mile_Delivery_Automation.exceptions.exception import DocumentPortalException
