@@ -28,3 +28,8 @@ venv/
 # OS
 .DS_Store
 Thumbs.db
+
+# Secrets and Keys
+.env
+api-keys.txt
+*.pem
