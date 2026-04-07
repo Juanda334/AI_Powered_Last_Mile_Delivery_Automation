@@ -33,7 +33,6 @@ artifacts
 notebooks
 docs
 CLAUDE.md
-README.md
 
 # Logs (generated at runtime)
 logs
