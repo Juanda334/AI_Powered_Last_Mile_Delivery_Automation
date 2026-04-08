@@ -1,0 +1,40 @@
+# ============================================================
+# Streamlit Frontend — Lightweight container
+# No ML dependencies — only the dashboard and HTTP client.
+# ============================================================
+FROM python:3.13-slim
+
+# Security: non-root user
+RUN groupadd -r appuser && \
+    useradd -r -g appuser -d /app -s /sbin/nologin appuser
+
+WORKDIR /app
+
+# Install minimal Python dependencies
+COPY requirements-streamlit.txt .
+RUN pip install --no-cache-dir -r requirements-streamlit.txt
+
+# Copy only the frontend code and config
+COPY streamlit_app.py .
+COPY src/AI_Powered_Last_Mile_Delivery_Automation/config/config.yaml \
+     src/AI_Powered_Last_Mile_Delivery_Automation/config/config.yaml
+
+RUN chown -R appuser:appuser /app
+
+# ── Environment ─────────────────────────────────────────────
+ENV PYTHONUNBUFFERED=1 \
+    API_BASE_URL=http://backend:8080
+
+# Switch to non-root user
+USER appuser
+
+EXPOSE 8501
+
+# Health check against Streamlit's internal endpoint
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8501/_stcore/health')" || exit 1
+
+ENTRYPOINT ["streamlit", "run", "streamlit_app.py", \
+            "--server.port=8501", \
+            "--server.address=0.0.0.0", \
+            "--server.headless=true"]

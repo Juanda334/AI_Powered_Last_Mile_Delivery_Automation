@@ -1,0 +1,5 @@
+# Streamlit frontend — minimal dependencies (no ML stack)
+streamlit
+httpx
+pandas
+PyYAML

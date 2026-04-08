@@ -49,3 +49,6 @@ Thumbs.db
 # Dev config
 .claude
 requirements-dev.txt
+
+# Compose (not needed inside images)
+docker-compose.yml

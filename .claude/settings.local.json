@@ -16,7 +16,8 @@
       "Bash(conda info:*)",
       "Bash(conda activate:*)",
       "Bash(python -c \"import ast; ast.parse\\(open\\('src/AI_Powered_Last_Mile_Delivery_Automation/components/resolution_agent.py', encoding='utf-8'\\).read\\(\\)\\); ast.parse\\(open\\('src/AI_Powered_Last_Mile_Delivery_Automation/components/critic_agent.py', encoding='utf-8'\\).read\\(\\)\\); ast.parse\\(open\\('src/AI_Powered_Last_Mile_Delivery_Automation/components/router_agent.py', encoding='utf-8'\\).read\\(\\)\\); print\\('OK'\\)\")",
-      "Bash(ruff format:*)"
+      "Bash(ruff format:*)",
+      "Bash(ruff check:*)"
     ]
   }
 }

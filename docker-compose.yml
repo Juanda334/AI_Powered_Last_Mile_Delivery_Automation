@@ -1,0 +1,57 @@
+# ============================================================
+# AI-Powered Last Mile Delivery Automation — Local Dev Stack
+# Usage:  docker compose up --build
+# ============================================================
+version: "3.9"
+
+services:
+  # ── FastAPI Backend ────────────────────────────────────────
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: last-mile-backend
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      - ENV=production
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')",
+        ]
+      interval: 30s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
+
+  # ── Streamlit Frontend ─────────────────────────────────────
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.streamlit
+    container_name: last-mile-frontend
+    ports:
+      - "8501:8501"
+    environment:
+      - API_BASE_URL=http://backend:8080
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8501/_stcore/health')",
+        ]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3

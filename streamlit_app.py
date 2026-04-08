@@ -9,9 +9,9 @@ Run with:
 from __future__ import annotations
 
 import json
+import os
 import time
 import uuid
-from io import StringIO
 
 import httpx
 import pandas as pd
@@ -24,8 +24,12 @@ import yaml
 
 _CONFIG_PATH = "src/AI_Powered_Last_Mile_Delivery_Automation/config/config.yaml"
 
+
 def _load_api_url() -> str:
-    """Read the API base URL from config.yaml, falling back to localhost."""
+    """Return API base URL: env var > config.yaml > localhost default."""
+    env_url = os.environ.get("API_BASE_URL")
+    if env_url:
+        return env_url
     try:
         with open(_CONFIG_PATH) as f:
             cfg = yaml.safe_load(f)
@@ -160,11 +164,17 @@ with tab_single:
 
                     # Store in session state for sidebar
                     st.session_state["last_response"] = result
-                    st.session_state["last_trajectory"] = result.get("trajectory_log", [])
-                    st.session_state["last_tool_calls"] = result.get("tool_calls_log", [])
+                    st.session_state["last_trajectory"] = result.get(
+                        "trajectory_log", []
+                    )
+                    st.session_state["last_tool_calls"] = result.get(
+                        "tool_calls_log", []
+                    )
 
                     # Display results
-                    st.success(f"Completed in {result.get('latency_sec', 'N/A')}s  |  Trace: {trace_id}")
+                    st.success(
+                        f"Completed in {result.get('latency_sec', 'N/A')}s  |  Trace: {trace_id}"
+                    )
 
                     col_res, col_comm = st.columns(2)
 
@@ -175,9 +185,15 @@ with tab_single:
                         st.metric("Resolution", resolution.get("resolution", "N/A"))
                         escalated = "YES" if result.get("escalated") else "NO"
                         st.metric("Escalated", escalated)
-                        guardrail = "TRIGGERED" if result.get("guardrail_triggered") else "CLEAR"
+                        guardrail = (
+                            "TRIGGERED"
+                            if result.get("guardrail_triggered")
+                            else "CLEAR"
+                        )
                         st.metric("Guardrail", guardrail)
-                        st.metric("Revisions", result.get("resolution_revision_count", 0))
+                        st.metric(
+                            "Revisions", result.get("resolution_revision_count", 0)
+                        )
                         if resolution.get("rationale"):
                             with st.expander("Rationale"):
                                 st.write(resolution["rationale"])
@@ -206,7 +222,11 @@ with tab_single:
                             st.text(f"  {i}. {entry}")
 
                 except httpx.ConnectError:
-                    st.error("Backend unavailable. Is the API server running at " + _api_url() + "?")
+                    st.error(
+                        "Backend unavailable. Is the API server running at "
+                        + _api_url()
+                        + "?"
+                    )
                 except httpx.TimeoutException:
                     st.warning(
                         "Request timed out. The LLM pipeline may be under heavy load. "
@@ -214,13 +234,19 @@ with tab_single:
                     )
                 except httpx.HTTPStatusError as exc:
                     if exc.response.status_code == 422:
-                        st.error(f"Invalid input: {exc.response.json().get('detail', exc)}")
+                        st.error(
+                            f"Invalid input: {exc.response.json().get('detail', exc)}"
+                        )
                     elif exc.response.status_code == 404:
                         st.error(f"Shipment not found: {shipment_id}")
                     elif exc.response.status_code == 503:
-                        st.error("Pipeline not initialized. The backend may still be starting up.")
+                        st.error(
+                            "Pipeline not initialized. The backend may still be starting up."
+                        )
                     else:
-                        st.error(f"Server error ({exc.response.status_code}). Trace ID: {trace_id}")
+                        st.error(
+                            f"Server error ({exc.response.status_code}). Trace ID: {trace_id}"
+                        )
                 except Exception as exc:
                     st.error(f"Unexpected error: {exc}")
 
@@ -229,7 +255,9 @@ with tab_single:
 
 with tab_batch:
     st.subheader("Batch Prediction")
-    st.caption("Upload a CSV or JSON file with shipment queries, or process all shipments from the default dataset.")
+    st.caption(
+        "Upload a CSV or JSON file with shipment queries, or process all shipments from the default dataset."
+    )
 
     uploaded_file = st.file_uploader(
         "Upload CSV or JSON",
@@ -239,9 +267,13 @@ with tab_batch:
 
     col_b1, col_b2 = st.columns([1, 1])
     with col_b1:
-        batch_max_loops = st.slider("Max Revision Loops (Batch)", 1, 5, 2, key="batch_loops")
+        batch_max_loops = st.slider(
+            "Max Revision Loops (Batch)", 1, 5, 2, key="batch_loops"
+        )
     with col_b2:
-        use_default = st.checkbox("Use default delivery_logs.csv", value=True, key="use_default")
+        use_default = st.checkbox(
+            "Use default delivery_logs.csv", value=True, key="use_default"
+        )
 
     if st.button("Run Batch", type="primary", key="run_batch"):
         trace_id = str(uuid.uuid4())
@@ -258,17 +290,22 @@ with tab_batch:
                     queries = []
                     for sid in df["shipment_id"].unique():
                         rows = df[df["shipment_id"] == sid].to_dict("records")
-                        queries.append({
-                            "shipment_id": str(sid),
-                            "raw_rows": rows,
-                            "max_loops": batch_max_loops,
-                        })
+                        queries.append(
+                            {
+                                "shipment_id": str(sid),
+                                "raw_rows": rows,
+                                "max_loops": batch_max_loops,
+                            }
+                        )
                     batch_payload["queries"] = queries
                 elif uploaded_file.name.endswith(".json"):
                     data = json.load(uploaded_file)
                     if isinstance(data, list):
                         batch_payload["queries"] = [
-                            {"shipment_id": q.get("shipment_id", ""), "max_loops": batch_max_loops}
+                            {
+                                "shipment_id": q.get("shipment_id", ""),
+                                "max_loops": batch_max_loops,
+                            }
                             for q in data
                         ]
                     else:
@@ -309,7 +346,9 @@ with tab_batch:
                 st.warning("Submission timed out.")
                 st.stop()
             except httpx.HTTPStatusError as exc:
-                st.error(f"Server error ({exc.response.status_code}): {exc.response.text[:200]}")
+                st.error(
+                    f"Server error ({exc.response.status_code}): {exc.response.text[:200]}"
+                )
                 st.stop()
             except Exception as exc:
                 st.error(f"Error: {exc}")
@@ -352,16 +391,20 @@ with tab_batch:
                         for r in results:
                             res = r.get("resolution", {})
                             comm = r.get("communication", {})
-                            rows.append({
-                                "Shipment": r.get("shipment_id", ""),
-                                "Exception": res.get("is_exception", ""),
-                                "Resolution": res.get("resolution", ""),
-                                "Tone": comm.get("tone_label", ""),
-                                "Escalated": "YES" if r.get("escalated") else "NO",
-                                "Latency (s)": r.get("latency_sec", ""),
-                            })
+                            rows.append(
+                                {
+                                    "Shipment": r.get("shipment_id", ""),
+                                    "Exception": res.get("is_exception", ""),
+                                    "Resolution": res.get("resolution", ""),
+                                    "Tone": comm.get("tone_label", ""),
+                                    "Escalated": "YES" if r.get("escalated") else "NO",
+                                    "Latency (s)": r.get("latency_sec", ""),
+                                }
+                            )
                         df_results = pd.DataFrame(rows)
-                        results_container.dataframe(df_results, use_container_width=True)
+                        results_container.dataframe(
+                            df_results, use_container_width=True
+                        )
 
                         # Store for sidebar
                         st.session_state["last_response"] = job_status
@@ -384,4 +427,6 @@ with tab_batch:
                 status_text.text(f"Poll error: {exc}")
 
         else:
-            st.warning("Batch polling timed out after 10 minutes. Check the API directly.")
+            st.warning(
+                "Batch polling timed out after 10 minutes. Check the API directly."
+            )

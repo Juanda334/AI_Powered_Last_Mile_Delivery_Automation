@@ -35,7 +35,7 @@ WORKDIR /app
 COPY --from=builder /install /usr/local
 
 # Copy application code and assets
-COPY api.py app.py main.py streamlit_app.py ./
+COPY api.py app.py main.py ./
 COPY templates/ templates/
 COPY data/external/ data/external/
 

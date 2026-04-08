@@ -13,11 +13,17 @@ on:
 
 env:
   AWS_REGION: us-east-1
+  # Backend
   ECR_REPOSITORY: ai-last-mile-delivery
   ECS_CLUSTER: last-mile-delivery-cluster
   ECS_SERVICE: last-mile-delivery-service
   ECS_TASK_DEFINITION: last-mile-delivery-task
   CONTAINER_NAME: last-mile-delivery-app
+  # Frontend
+  ECR_REPOSITORY_FRONTEND: ai-last-mile-delivery-frontend
+  ECS_SERVICE_FRONTEND: last-mile-delivery-frontend-service
+  ECS_TASK_DEFINITION_FRONTEND: last-mile-delivery-frontend-task
+  CONTAINER_NAME_FRONTEND: last-mile-delivery-frontend
 
 # ────────────────────────────────────────────────────────────
 # Stage 1: Quality Assurance (lint + test)
@@ -93,11 +99,50 @@ jobs:
           echo "image-uri=${IMAGE_URI}" >> "${GITHUB_OUTPUT}"
 
   # ────────────────────────────────────────────────────────────
+  # Stage 2b: Build & Push Frontend Docker image to AWS ECR
+  # Runs in parallel with build-push (both need only quality)
+  # ────────────────────────────────────────────────────────────
+  build-push-frontend:
+    name: Build & Push Frontend to ECR
+    needs: quality
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    outputs:
+      image-uri: ${{ steps.build.outputs.image-uri }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, and push Frontend image
+        id: build
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          IMAGE_URI="${ECR_REGISTRY}/${ECR_REPOSITORY_FRONTEND}:${IMAGE_TAG}"
+          docker build -f Dockerfile.streamlit -t "${IMAGE_URI}" .
+          docker push "${IMAGE_URI}"
+          echo "image-uri=${IMAGE_URI}" >> "${GITHUB_OUTPUT}"
+
+  # ────────────────────────────────────────────────────────────
   # Stage 3: Deploy to AWS ECS Fargate
   # ────────────────────────────────────────────────────────────
   deploy:
     name: Deploy to ECS Fargate
-    needs: build-push
+    needs: [build-push, build-push-frontend]
     runs-on: ubuntu-latest
 
     steps:
@@ -111,14 +156,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Download current ECS task definition
+      - name: Download current Backend ECS task definition
         run: |
           aws ecs describe-task-definition \
             --task-definition "${ECS_TASK_DEFINITION}" \
             --query taskDefinition \
             > task-definition.json
 
-      - name: Update task definition with new image
+      - name: Update Backend task definition with new image
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
@@ -126,10 +171,34 @@ jobs:
           container-name: ${{ env.CONTAINER_NAME }}
           image: ${{ needs.build-push.outputs.image-uri }}
 
-      - name: Deploy to Amazon ECS
+      - name: Deploy Backend to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
           service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
+
+      # ── Frontend deployment ──────────────────────────────────
+      - name: Download current Frontend ECS task definition
+        run: |
+          aws ecs describe-task-definition \
+            --task-definition "${ECS_TASK_DEFINITION_FRONTEND}" \
+            --query taskDefinition \
+            > task-definition-frontend.json
+
+      - name: Update Frontend task definition with new image
+        id: task-def-frontend
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition-frontend.json
+          container-name: ${{ env.CONTAINER_NAME_FRONTEND }}
+          image: ${{ needs.build-push-frontend.outputs.image-uri }}
+
+      - name: Deploy Frontend to Amazon ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.task-def-frontend.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE_FRONTEND }}
           cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: true
