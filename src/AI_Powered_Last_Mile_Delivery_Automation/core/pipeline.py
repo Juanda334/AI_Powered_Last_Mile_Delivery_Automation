@@ -126,9 +126,7 @@ class PipelineManager:
         # Wipe all sessions still in the store so no checkpoints leak across
         # reloads / test runs that reuse the same process.
         try:
-            active = list(
-                getattr(self.session_store, "_records", {}).keys()
-            )
+            active = list(getattr(self.session_store, "_records", {}).keys())
             for sid in active:
                 self.wipe_session(sid)
         except Exception as exc:
