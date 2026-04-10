@@ -25,6 +25,10 @@ class SingleQueryRequest(BaseModel):
         description="Optional raw delivery-log rows. If omitted, loaded from the default CSV.",
     )
     max_loops: int = Field(default=2, ge=1, le=5, description="Max revision loops")
+    session_id: str | None = Field(
+        default=None,
+        description="Optional session identifier. If omitted, the server generates a UUID and returns it via the X-Session-Id response header.",
+    )
 
 
 class BatchQueryRequest(BaseModel):
@@ -37,6 +41,10 @@ class BatchQueryRequest(BaseModel):
         default=None, description="Path to a CSV/JSON file with shipment queries"
     )
     max_loops: int = Field(default=2, ge=1, le=5)
+    session_id: str | None = Field(
+        default=None,
+        description="Optional session identifier. Shared by every query in the batch; wipe runs once the batch job terminates.",
+    )
 
     @model_validator(mode="after")
     def _exactly_one_source(self) -> BatchQueryRequest:
@@ -94,6 +102,7 @@ class SingleQueryResponse(BaseModel):
     final_actions: list[dict] = Field(default_factory=list)
     latency_sec: float | None = None
     trace_id: str | None = None
+    session_id: str | None = None
 
 
 class BatchJobResponse(BaseModel):
@@ -106,6 +115,7 @@ class BatchJobResponse(BaseModel):
     failed: int = 0
     results: list[SingleQueryResponse] | None = None
     error: str | None = None
+    session_id: str | None = None
 
 
 class PredictResponse(BaseModel):
@@ -145,6 +155,7 @@ class HomeResponse(BaseModel):
 def state_to_response(
     state: dict[str, Any],
     trace_id: str | None = None,
+    session_id: str | None = None,
 ) -> SingleQueryResponse:
     """Convert a ``UnifiedAgentState`` dict into a ``SingleQueryResponse``."""
     res = state.get("resolution_output") or {}
@@ -169,4 +180,5 @@ def state_to_response(
         final_actions=state.get("final_actions") or [],
         latency_sec=state.get("latency_sec"),
         trace_id=trace_id,
+        session_id=session_id,
     )

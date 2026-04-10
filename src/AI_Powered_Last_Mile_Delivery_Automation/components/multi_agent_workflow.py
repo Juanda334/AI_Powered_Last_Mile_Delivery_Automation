@@ -499,3 +499,50 @@ def run_workflow(
         elapsed,
     )
     return result
+
+
+def wipe_thread(app: Any, thread_id: str) -> bool:
+    """Remove every checkpoint tied to ``thread_id`` from the compiled app.
+
+    LangSmith remote traces are unaffected — this only touches the local
+    checkpointer (``MemorySaver`` by default). Returns ``True`` on success.
+    """
+    checkpointer = getattr(app, "checkpointer", None)
+    if checkpointer is None:
+        return False
+
+    # LangGraph ≥ 0.2 exposes ``delete_thread`` directly.
+    delete_thread = getattr(checkpointer, "delete_thread", None)
+    if callable(delete_thread):
+        try:
+            delete_thread(thread_id)
+            return True
+        except Exception as exc:
+            logger.warning(
+                "wipe_thread  delete_thread failed  thread_id=%s  err=%s",
+                thread_id,
+                exc,
+            )
+
+    # Fallback — scrub the MemorySaver internal dicts by thread_id.
+    wiped = False
+    for attr in ("storage", "writes", "blobs"):
+        container = getattr(checkpointer, attr, None)
+        if isinstance(container, dict):
+            for key in [k for k in container if _thread_matches(k, thread_id)]:
+                container.pop(key, None)
+                wiped = True
+    if not wiped:
+        logger.warning(
+            "wipe_thread  no checkpointer entries removed  thread_id=%s", thread_id
+        )
+    return wiped
+
+
+def _thread_matches(key: Any, thread_id: str) -> bool:
+    """MemorySaver keys are either the raw thread_id or a tuple starting with it."""
+    if key == thread_id:
+        return True
+    if isinstance(key, tuple) and key and key[0] == thread_id:
+        return True
+    return False

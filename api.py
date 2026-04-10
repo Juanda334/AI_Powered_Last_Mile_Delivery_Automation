@@ -8,12 +8,23 @@ Run with:
 
 from __future__ import annotations
 
+import asyncio
+import contextlib
 import os
 import uuid
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from dotenv import load_dotenv
-from fastapi import BackgroundTasks, FastAPI, Header, HTTPException, Request
+from fastapi import (
+    BackgroundTasks,
+    Depends,
+    FastAPI,
+    Header,
+    HTTPException,
+    Request,
+    Response,
+)
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
@@ -45,10 +56,11 @@ from AI_Powered_Last_Mile_Delivery_Automation.utils.agent_states_view import Age
 
 logger = get_module_logger("api")
 
-# ── In-memory batch job store ─────────────────────────────────────────────
-_batch_jobs: dict[str, BatchJobResponse] = {}
+# Batch jobs live on ``PipelineManager._batch_jobs`` so ``wipe_session`` can
+# reach them — there is no module-level store.
 
 _DEFAULT_LOGS_CSV = "data/processed/delivery_logs.csv"
+_SWEEPER_INTERVAL_SEC = float(os.environ.get("SESSION_SWEEP_INTERVAL_SEC", "60"))
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -56,18 +68,42 @@ _DEFAULT_LOGS_CSV = "data/processed/delivery_logs.csv"
 # ═══════════════════════════════════════════════════════════════════════════
 
 
+async def _ttl_sweeper(pipeline) -> None:
+    """Background loop that wipes sessions past their TTL."""
+    logger.info("session TTL sweeper started  interval=%.1fs", _SWEEPER_INTERVAL_SEC)
+    while True:
+        try:
+            await asyncio.sleep(_SWEEPER_INTERVAL_SEC)
+            wiped = pipeline.sweep_expired_sessions()
+            if wiped:
+                logger.info("TTL sweeper  wiped=%d sessions", wiped)
+        except asyncio.CancelledError:
+            raise
+        except Exception as exc:
+            logger.warning("TTL sweeper iteration failed  err=%s", exc)
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Initialize the pipeline on startup, release on shutdown."""
+    """Initialize the pipeline, start the sweeper, release on shutdown."""
     pipeline = PipelineManager.get()
     try:
         pipeline.initialize()
         logger.info("Pipeline initialized — server ready")
     except Exception:
-        logger.exception("Pipeline initialization failed — server starting in degraded mode")
-    yield
-    pipeline.shutdown()
-    logger.info("Pipeline shut down")
+        logger.exception(
+            "Pipeline initialization failed — server starting in degraded mode"
+        )
+
+    sweeper_task = asyncio.create_task(_ttl_sweeper(pipeline))
+    try:
+        yield
+    finally:
+        sweeper_task.cancel()
+        with contextlib.suppress(asyncio.CancelledError):
+            await sweeper_task
+        pipeline.shutdown()
+        logger.info("Pipeline shut down")
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -175,9 +211,57 @@ async def home():
             "/home": "GET",
             "/predict": "POST",
             "/predict/batch/{job_id}": "GET",
+            "/sessions/{session_id}/wipe": "POST",
             "/docs": "GET",
         },
     )
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Session scope dependency
+# ═══════════════════════════════════════════════════════════════════════════
+
+
+def _resolve_session_id(
+    payload: PredictRequest, header_session_id: str | None
+) -> str:
+    """Pick session_id from payload → header → fresh UUID."""
+    candidates: list[str | None] = [header_session_id]
+    if payload.query is not None:
+        candidates.append(payload.query.session_id)
+    if payload.batch is not None:
+        candidates.append(payload.batch.session_id)
+    for sid in candidates:
+        if sid:
+            return sid
+    return str(uuid.uuid4())
+
+
+async def session_scope(
+    payload: PredictRequest,
+    x_session_id: str | None = Header(default=None),
+) -> AsyncIterator[str]:
+    """Dependency that binds a request to a session and wipes on exit.
+
+    Single-query mode: auto-wipe once the response is serialized.
+    Batch mode: wipe is deferred to ``_run_batch_job``'s ``finally`` so the
+    background task keeps access to the checkpoints it needs.
+    """
+    session_id = _resolve_session_id(payload, x_session_id)
+    pipeline = PipelineManager.get()
+    pipeline.session_store.touch(session_id)
+    try:
+        yield session_id
+    finally:
+        if payload.query is not None:
+            try:
+                pipeline.wipe_session(session_id)
+            except Exception as exc:
+                logger.warning(
+                    "session_scope  wipe failed  session_id=%s  err=%s",
+                    session_id,
+                    exc,
+                )
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -189,7 +273,9 @@ async def home():
 async def predict(
     payload: PredictRequest,
     background_tasks: BackgroundTasks,
+    response: Response,
     x_trace_id: str | None = Header(default=None),
+    session_id: str = Depends(session_scope),
 ):
     """Primary execution endpoint — single query or batch mode."""
     pipeline = PipelineManager.get()
@@ -197,6 +283,7 @@ async def predict(
         raise HTTPException(status_code=503, detail="Pipeline not initialized")
 
     trace_id = x_trace_id or trace_id_var.get("") or str(uuid.uuid4())
+    response.headers["X-Session-Id"] = session_id
 
     # ── Single-query mode ─────────────────────────────────────────
     if payload.query:
@@ -215,28 +302,32 @@ async def predict(
             raw_rows,
             max_loops=payload.query.max_loops,
             trace_id=trace_id,
+            session_id=session_id,
         )
-        return PredictResponse(result=state_to_response(dict(result), trace_id))
+        return PredictResponse(
+            result=state_to_response(dict(result), trace_id, session_id)
+        )
 
     # ── Batch mode ────────────────────────────────────────────────
     if payload.batch:
         job_id = str(uuid.uuid4())
         batch_req = payload.batch
 
-        # Resolve total count
         if batch_req.queries:
             total = len(batch_req.queries)
         else:
-            total = 0  # will be updated once dataset is loaded
+            total = 0  # updated once the dataset is loaded
 
         job = BatchJobResponse(
             job_id=job_id,
             status="accepted",
             total=total,
+            session_id=session_id,
         )
-        _batch_jobs[job_id] = job
+        pipeline._batch_jobs[job_id] = job
+        pipeline.session_store.register_batch(session_id, job_id)
         background_tasks.add_task(
-            _run_batch_job, job_id, batch_req, trace_id
+            _run_batch_job, job_id, batch_req, trace_id, session_id
         )
         return PredictResponse(job=job)
 
@@ -247,12 +338,35 @@ async def predict(
 
 
 @app.get("/predict/batch/{job_id}", response_model=BatchJobResponse)
-async def get_batch_status(job_id: str):
-    """Poll for batch job progress."""
-    job = _batch_jobs.get(job_id)
+async def get_batch_status(
+    job_id: str,
+    x_session_id: str | None = Header(default=None),
+):
+    """Poll for batch job progress.
+
+    If ``X-Session-Id`` is supplied it must match the job's owning session —
+    prevents cross-session reads of in-flight batch results.
+    """
+    pipeline = PipelineManager.get()
+    job = pipeline._batch_jobs.get(job_id)
     if not job:
         raise HTTPException(status_code=404, detail=f"Batch job {job_id} not found")
+    if x_session_id and job.session_id and x_session_id != job.session_id:
+        raise HTTPException(status_code=404, detail=f"Batch job {job_id} not found")
     return job
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# POST /sessions/{session_id}/wipe
+# ═══════════════════════════════════════════════════════════════════════════
+
+
+@app.post("/sessions/{session_id}/wipe")
+async def wipe_session_endpoint(session_id: str):
+    """Client-initiated teardown — drops checkpoints and batch entries."""
+    pipeline = PipelineManager.get()
+    result = pipeline.wipe_session(session_id)
+    return {"session_id": session_id, "wiped": result}
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -264,18 +378,23 @@ async def _run_batch_job(
     job_id: str,
     batch_req: BatchQueryRequest,
     trace_id: str,
+    session_id: str,
 ) -> None:
-    """Execute a batch of queries in the background, updating job status."""
+    """Execute a batch of queries in the background, updating job status.
+
+    On exit — success, failure, or cancellation — the session is wiped,
+    which drops all LangGraph checkpoints for threads opened during the
+    batch plus the job entry itself. ``BATCH_RETAIN_RESULTS_SEC`` can delay
+    the wipe so clients still have time to poll results.
+    """
     pipeline = PipelineManager.get()
-    job = _batch_jobs[job_id]
+    job = pipeline._batch_jobs[job_id]
     job.status = "running"
     results: list[SingleQueryResponse] = []
 
     try:
-        # Resolve queries
         queries = batch_req.queries
         if queries is None and batch_req.dataset_path:
-            # Load shipment IDs from dataset file
             logs = load_delivery_logs(batch_req.dataset_path)
             queries = []
             for sid, rows in logs.items():
@@ -293,8 +412,8 @@ async def _run_batch_job(
             job.error = "No queries resolved from the batch request"
             return
 
-        # Execute each query
         for i, q in enumerate(queries):
+            per_query_trace = f"{trace_id}:batch:{i}"
             try:
                 raw_rows = q.raw_rows
                 if raw_rows is None:
@@ -308,7 +427,8 @@ async def _run_batch_job(
                                 final_actions=[
                                     {"action": "ERROR", "message": "Shipment not found"}
                                 ],
-                                trace_id=trace_id,
+                                trace_id=per_query_trace,
+                                session_id=session_id,
                             )
                         )
                         job.failed += 1
@@ -319,9 +439,12 @@ async def _run_batch_job(
                     q.shipment_id,
                     raw_rows,
                     max_loops=q.max_loops,
-                    trace_id=f"{trace_id}:batch:{i}",
+                    trace_id=per_query_trace,
+                    session_id=session_id,
                 )
-                results.append(state_to_response(dict(state), f"{trace_id}:batch:{i}"))
+                results.append(
+                    state_to_response(dict(state), per_query_trace, session_id)
+                )
             except Exception as exc:
                 logger.error(
                     "Batch job %s  query %d/%d failed: %s",
@@ -334,7 +457,8 @@ async def _run_batch_job(
                         final_actions=[
                             {"action": "ERROR", "message": str(exc)[:200]}
                         ],
-                        trace_id=f"{trace_id}:batch:{i}",
+                        trace_id=per_query_trace,
+                        session_id=session_id,
                     )
                 )
                 job.failed += 1
@@ -349,3 +473,15 @@ async def _run_batch_job(
         job.status = "failed"
         job.error = str(exc)[:500]
         job.results = results if results else None
+    finally:
+        retain_sec = float(os.environ.get("BATCH_RETAIN_RESULTS_SEC", "0"))
+        if retain_sec > 0:
+            await asyncio.sleep(retain_sec)
+        try:
+            pipeline.wipe_session(session_id)
+        except Exception as exc:
+            logger.warning(
+                "batch cleanup  wipe_session failed  session_id=%s  err=%s",
+                session_id,
+                exc,
+            )

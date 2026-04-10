@@ -33,3 +33,6 @@ Thumbs.db
 .env
 api-keys.txt
 *.pem
+
+# Documentation
+docs/

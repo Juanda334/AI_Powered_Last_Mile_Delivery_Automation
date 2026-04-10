@@ -42,6 +42,62 @@ class TraceIdFilter(logging.Filter):
         return True
 
 
+_PII_KEYS: frozenset[str] = frozenset(
+    {
+        "customer_profile_full",
+        "name",
+        "customer_name",
+        "email",
+        "phone",
+        "address",
+        "raw_rows",
+    }
+)
+_REDACTED = "<redacted>"
+
+
+def _scrub_pii(value: object, depth: int = 0) -> object:
+    """Return a PII-safe copy of ``value``.
+
+    Walks dicts/lists/tuples recursively and replaces any value whose key
+    appears in ``_PII_KEYS`` with ``<redacted>``. Depth is bounded so a
+    pathological record cannot blow the stack.
+    """
+    if depth > 6:
+        return value
+    if isinstance(value, dict):
+        return {
+            k: (_REDACTED if k in _PII_KEYS else _scrub_pii(v, depth + 1))
+            for k, v in value.items()
+        }
+    if isinstance(value, (list, tuple)):
+        scrubbed = [_scrub_pii(item, depth + 1) for item in value]
+        return type(value)(scrubbed) if isinstance(value, tuple) else scrubbed
+    return value
+
+
+class PIIFilter(logging.Filter):
+    """Redact known-PII keys from log record ``args`` and ``msg``.
+
+    Attached to every module logger so any dict / list passed as a format
+    argument — or embedded in a pre-formatted message string — is stripped
+    before reaching disk or the console handler. Custom ``extra={}`` fields
+    are scrubbed the same way.
+    """
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        if record.args:
+            if isinstance(record.args, dict):
+                record.args = _scrub_pii(record.args)  # type: ignore[assignment]
+            elif isinstance(record.args, tuple):
+                record.args = tuple(_scrub_pii(a) for a in record.args)
+        # Scrub any extras attached via ``logger.info(..., extra={...})``.
+        for key in list(record.__dict__.keys()):
+            if key in _PII_KEYS:
+                record.__dict__[key] = _REDACTED
+        return True
+
+
 class JSONFormatter(logging.Formatter):
     """Emit log records as single-line JSON objects for machine parsing."""
 
@@ -109,8 +165,10 @@ def get_module_logger(module_name: str) -> logging.Logger:
     if logger.handlers:
         return logger
 
-    # Attach trace-ID filter so every record includes the current trace ID.
+    # Attach trace-ID filter so every record includes the current trace ID,
+    # and the PII filter so customer data never reaches disk.
     logger.addFilter(TraceIdFilter())
+    logger.addFilter(PIIFilter())
 
     formatter = _get_formatter()
 
