@@ -163,6 +163,17 @@ jobs:
             --query taskDefinition \
             > task-definition.json
 
+      - name: Validate secrets in backend task definition
+        run: |
+          REQUIRED_SECRETS="OPENAI_API_KEY OPENAI_API_BASE CHROMA_API_KEY CHROMA_TENANT CHROMA_DATABASE"
+          for secret_name in $REQUIRED_SECRETS; do
+            if ! jq -e ".containerDefinitions[] | select(.name==\"${{ env.CONTAINER_NAME }}\") | .secrets[] | select(.name==\"${secret_name}\")" task-definition.json > /dev/null 2>&1; then
+              echo "::error::Task definition missing required secret: ${secret_name}"
+              exit 1
+            fi
+          done
+          echo "All required secrets present in task definition"
+
       - name: Update Backend task definition with new image
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1

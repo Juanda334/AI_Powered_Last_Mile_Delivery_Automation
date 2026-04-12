@@ -38,13 +38,14 @@ COPY --from=builder /install /usr/local
 COPY api.py app.py main.py ./
 COPY templates/ templates/
 COPY data/external/ data/external/
+COPY scripts/preflight.sh /app/scripts/preflight.sh
 
 # Copy secrets-free config (API keys come from env vars)
 COPY src/AI_Powered_Last_Mile_Delivery_Automation/config/config.yaml \
      src/AI_Powered_Last_Mile_Delivery_Automation/config/config.yaml
 
 # Ensure the logs directory is writable by the non-root user
-RUN mkdir -p /app/logs && chown -R appuser:appuser /app
+RUN mkdir -p /app/logs && chmod +x /app/scripts/preflight.sh && chown -R appuser:appuser /app
 
 # ── Environment ─────────────────────────────────────────────
 # Production mode: secrets from env vars, no .env loading
@@ -63,4 +64,4 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')" || exit 1
 
-ENTRYPOINT ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8080"]
+ENTRYPOINT ["/app/scripts/preflight.sh", "uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8080"]
